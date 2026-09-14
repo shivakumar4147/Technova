@@ -8,21 +8,21 @@ export const LoginScreen: React.FC = () => {
   const { loginWithGoogle } = useApp();
 
   return (
-    <div className="min-h-screen bg-[#0B0F17] flex flex-col justify-center px-4 py-8 relative text-[#F8FAFC] font-sans">
+    <div className="min-h-screen bg-[#F8F8F8] dark:bg-[#0D1117] flex flex-col justify-center px-4 py-8 relative text-[#0F0F0F] dark:text-[#F0F6FC] font-sans transition-colors duration-200">
       <div className="max-w-sm mx-auto w-full">
         
         {/* Logo Header */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-[#5DD62C]/20 border border-[#5DD62C] flex items-center justify-center text-[#5DD62C] shadow-md mb-3">
-            <Radio className="w-8 h-8 text-[#5DD62C] font-black" />
+          <div className="w-16 h-16 rounded-2xl bg-[#5DD62C]/20 border border-[#5DD62C] flex items-center justify-center text-[#0F0F0F] shadow-xs mb-3">
+            <Radio className="w-8 h-8 text-[#337418] dark:text-[#5DD62C] font-black" />
           </div>
-          <h2 className="text-2xl font-black text-[#F8FAFC] tracking-tight">TECHNOVA CONNECT</h2>
-          <p className="text-xs text-[#94A3B8] font-medium mt-1">Inter-Collegiate Event & Communication Hub</p>
+          <h2 className="text-2xl font-black text-[#0F0F0F] dark:text-[#F0F6FC] tracking-tight">TECHNOVA CONNECT</h2>
+          <p className="text-xs text-[#64748B] dark:text-[#8B949E] font-medium mt-1">Inter-Collegiate Event & Communication Hub</p>
         </div>
 
-        {/* Dark Obsidian Login Card */}
-        <div className="p-6 rounded-2xl bg-[#111827] border border-[#1E293B] shadow-md space-y-4">
-          <p className="text-xs text-[#94A3B8] font-bold text-center mb-2">
+        {/* Login Card */}
+        <div className="p-6 rounded-2xl bg-[#FFFFFF] dark:bg-[#161B22] border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+          <p className="text-xs text-[#64748B] dark:text-[#8B949E] font-bold text-center mb-2">
             Sign in using your Google account to access Technova 2026
           </p>
 
@@ -30,7 +30,7 @@ export const LoginScreen: React.FC = () => {
           <button
             onClick={() => loginWithGoogle()}
             type="button"
-            className="w-full py-4 px-4 rounded-xl bg-[#1E293B] hover:bg-[#334155] border border-[#334155] hover:border-[#5DD62C] text-[#F8FAFC] font-black text-sm shadow-xs flex items-center justify-center gap-3 active:scale-[0.98] transition group cursor-pointer"
+            className="w-full py-4 px-4 rounded-xl bg-[#FFFFFF] dark:bg-[#0D1117] hover:bg-slate-50 dark:hover:bg-slate-800 border-2 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-[#0F0F0F] dark:text-[#F0F6FC] font-black text-sm shadow-xs flex items-center justify-center gap-3 active:scale-[0.98] transition group cursor-pointer"
           >
             {/* Multicolor Google G Logo */}
             <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
@@ -56,8 +56,8 @@ export const LoginScreen: React.FC = () => {
         </div>
 
         {/* Trust info */}
-        <div className="mt-8 p-3.5 rounded-2xl bg-[#111827] border border-[#1E293B] text-center flex items-center justify-center gap-2 text-xs text-[#94A3B8]">
-          <ShieldCheck className="w-4 h-4 text-[#5DD62C] shrink-0" />
+        <div className="mt-8 p-3.5 rounded-2xl bg-[#FFFFFF] dark:bg-[#161B22] border border-slate-200 dark:border-slate-800 text-center flex items-center justify-center gap-2 text-xs text-[#64748B] dark:text-[#8B949E]">
+          <ShieldCheck className="w-4 h-4 text-[#337418] dark:text-[#5DD62C] shrink-0" />
           <span>Secure Google OAuth synced with Supabase</span>
         </div>
 

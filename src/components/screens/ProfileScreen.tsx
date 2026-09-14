@@ -2,24 +2,21 @@
 
 import React from 'react';
 import { useApp } from '@/context/AppContext';
-import { User, Building, Phone, Shield, Moon, Sun, LogOut, ArrowLeft, Edit3, Check, LogIn, Lock } from 'lucide-react';
+import { Building, Phone, Moon, Sun, LogOut, ArrowLeft, Edit3, LogIn, Lock } from 'lucide-react';
 
 export const ProfileScreen: React.FC = () => {
-  const { currentUser, logout, navigateTo, loginWithGoogle, theme, toggleTheme } = useApp();
-  const isDark = theme === 'dark';
+  const { currentUser, logout, navigateTo, loginWithGoogle, themeMode, toggleTheme } = useApp();
 
   // If user is NOT signed in, render Clean Unauthenticated Sign-In Guard
   if (!currentUser) {
     return (
-      <div className={`pb-28 pt-8 px-4 max-w-md mx-auto min-h-[80vh] flex flex-col justify-center items-center text-center font-sans transition-colors duration-300 ${
-        isDark ? 'bg-[#0B0F17] text-[#F8FAFC]' : 'bg-[#F8F9FA] text-[#0F172A]'
-      }`}>
-        <div className="w-16 h-16 rounded-3xl bg-[#5DD62C]/20 border border-[#5DD62C]/50 flex items-center justify-center text-[#5DD62C] shadow-md mb-4">
-          <Lock className="w-8 h-8 text-[#5DD62C]" />
+      <div className="pb-28 pt-8 px-4 max-w-md mx-auto min-h-[80vh] flex flex-col justify-center items-center text-center bg-[#F8F8F8] dark:bg-[#0D1117] font-sans">
+        <div className="w-16 h-16 rounded-3xl bg-[#5DD62C]/20 border border-[#5DD62C] flex items-center justify-center text-[#337418] dark:text-[#5DD62C] shadow-xs mb-4">
+          <Lock className="w-8 h-8 text-[#337418] dark:text-[#5DD62C]" />
         </div>
 
-        <h2 className="text-xl font-black mb-1">Not Signed In</h2>
-        <p className="text-xs font-medium opacity-70 max-w-xs mb-6 leading-relaxed">
+        <h2 className="text-xl font-black text-[#0F0F0F] dark:text-[#F0F6FC] mb-1">Not Signed In</h2>
+        <p className="text-xs text-[#64748B] dark:text-[#8B949E] font-medium max-w-xs mb-6 leading-relaxed">
           Sign in to access your Technova Connect profile, PU College delegate details, group communications, and role permissions.
         </p>
 
@@ -27,9 +24,7 @@ export const ProfileScreen: React.FC = () => {
           {/* Sign In with Google */}
           <button
             onClick={loginWithGoogle}
-            className={`w-full py-3.5 px-4 rounded-2xl border font-black text-xs shadow-xs flex items-center justify-center gap-2.5 transition active:scale-95 cursor-pointer ${
-              isDark ? 'bg-[#1E293B] border-[#334155] hover:bg-[#334155] text-[#F8FAFC]' : 'bg-[#FFFFFF] border-[#E2E8F0] hover:bg-[#F1F5F9] text-[#0F172A]'
-            }`}
+            className="w-full py-3.5 px-4 rounded-2xl bg-white dark:bg-[#161B22] border border-slate-300 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-[#0F0F0F] dark:text-[#F0F6FC] font-black text-xs shadow-xs flex items-center justify-center gap-2.5 transition active:scale-95 cursor-pointer"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -43,7 +38,7 @@ export const ProfileScreen: React.FC = () => {
           {/* Phone / Alternate Login */}
           <button
             onClick={() => navigateTo('login')}
-            className="w-full py-3 px-4 rounded-2xl bg-[#5DD62C] hover:bg-[#50b925] text-[#0B0F17] font-extrabold text-xs shadow-xs flex items-center justify-center gap-2 transition active:scale-95 cursor-pointer"
+            className="w-full py-3 px-4 rounded-2xl bg-[#5DD62C] hover:bg-[#50b925] text-[#0F0F0F] font-extrabold text-xs shadow-xs flex items-center justify-center gap-2 transition active:scale-95 cursor-pointer"
           >
             <LogIn className="w-4 h-4" />
             <span>Go to Login Page</span>
@@ -54,40 +49,34 @@ export const ProfileScreen: React.FC = () => {
   }
 
   return (
-    <div className={`pb-28 pt-3 px-4 max-w-md mx-auto min-h-screen font-sans transition-colors duration-300 ${
-      isDark ? 'bg-[#0B0F17] text-[#F8FAFC]' : 'bg-[#F8F9FA] text-[#0F172A]'
-    }`}>
+    <div className="pb-28 pt-3 px-4 max-w-md mx-auto min-h-screen bg-[#F8F8F8] dark:bg-[#0D1117] font-sans">
       
       {/* Header Bar */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigateTo('chat_home')}
-            className={`p-1.5 rounded-xl transition cursor-pointer ${
-              isDark ? 'text-[#F8FAFC] hover:bg-[#1E293B]' : 'text-[#0F172A] hover:bg-[#E2E8F0]'
-            }`}
+            className="p-1.5 rounded-xl text-[#0F0F0F] dark:text-[#F0F6FC] hover:bg-slate-200 dark:hover:bg-slate-800 transition cursor-pointer"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h2 className="text-base font-black">My Profile</h2>
-            <p className="text-[11px] font-medium opacity-70">Account preferences & details</p>
+            <h2 className="text-base font-black text-[#0F0F0F] dark:text-[#F0F6FC]">My Profile</h2>
+            <p className="text-[11px] text-[#64748B] dark:text-[#8B949E] font-medium">Account preferences & details</p>
           </div>
         </div>
 
         <button
           onClick={() => navigateTo('profile_setup')}
-          className="p-2 rounded-xl text-[#5DD62C] hover:bg-[#5DD62C]/20 transition cursor-pointer"
+          className="p-2 rounded-xl text-[#337418] dark:text-[#5DD62C] hover:bg-[#5DD62C]/20 transition cursor-pointer"
           title="Edit Profile"
         >
           <Edit3 className="w-4.5 h-4.5" />
         </button>
       </div>
 
-      {/* Profile Overview Card */}
-      <div className={`p-4 rounded-2xl border shadow-md mb-3.5 ${
-        isDark ? 'bg-[#111827] border-[#1E293B]' : 'bg-[#FFFFFF] border-[#E2E8F0]'
-      }`}>
+      {/* Profile Overview Card (Clean & Sleek with Profile Photo) */}
+      <div className="p-4 rounded-2xl bg-[#FFFFFF] dark:bg-[#161B22] border border-slate-200 dark:border-slate-800 shadow-xs mb-3.5">
         <div className="flex items-center gap-3.5">
           <img
             src={currentUser.avatar_url || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80'}
@@ -95,62 +84,60 @@ export const ProfileScreen: React.FC = () => {
             className="w-12 h-12 rounded-full object-cover border-2 border-[#5DD62C] shadow-xs shrink-0"
           />
           <div className="min-w-0 flex-1">
-            <span className="text-[10px] font-black px-2.5 py-0.5 rounded-lg bg-[#5DD62C] text-[#0B0F17] shadow-xs uppercase tracking-wider inline-block mb-1">
+            <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-lg bg-[#5DD62C] text-[#0F0F0F] shadow-xs uppercase tracking-wider inline-block mb-1">
               {(currentUser.role || 'teacher').toUpperCase()} ACCESS
             </span>
-            <h3 className="text-base font-black truncate">{currentUser.full_name}</h3>
-            <p className="text-xs font-medium opacity-70 truncate">{currentUser.designation || 'Faculty Member'}</p>
+            <h3 className="text-base font-black text-[#0F0F0F] dark:text-[#F0F6FC] truncate">{currentUser.full_name}</h3>
+            <p className="text-xs text-[#475569] dark:text-[#8B949E] font-medium truncate">{currentUser.designation || 'Faculty Member'}</p>
           </div>
         </div>
 
-        <div className={`mt-3.5 pt-3 border-t flex items-center gap-2 text-xs font-bold ${
-          isDark ? 'border-[#1E293B]' : 'border-[#E2E8F0]'
-        }`}>
-          <Building className="w-4 h-4 text-[#5DD62C] shrink-0" />
-          <span className="truncate">{currentUser.college_name || 'PU College Delegate'}</span>
+        <div className="mt-3.5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2 text-xs text-[#0F0F0F] dark:text-[#F0F6FC]">
+          <Building className="w-4 h-4 text-[#337418] dark:text-[#5DD62C] shrink-0" />
+          <span className="font-bold truncate">{currentUser.college_name || 'PU College Delegate'}</span>
         </div>
       </div>
 
-      {/* Two Column Section: Phone Status & Visual Theme */}
+      {/* Two Column Section: Phone Status & Visual Theme Toggle */}
       <div className="grid grid-cols-2 gap-3 mb-3.5">
         {/* Phone Status */}
-        <div className={`p-3.5 rounded-2xl border shadow-xs flex flex-col justify-between h-28 ${
-          isDark ? 'bg-[#111827] border-[#1E293B]' : 'bg-[#FFFFFF] border-[#E2E8F0]'
-        }`}>
+        <div className="p-3.5 rounded-2xl bg-[#FFFFFF] dark:bg-[#161B22] border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between h-28">
           <div className="flex items-center justify-between">
-            <Phone className="w-4 h-4 text-[#5DD62C]" />
-            <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-[#5DD62C]/20 text-[#337418] dark:text-[#5DD62C] border border-[#5DD62C]/50">
+            <Phone className="w-4 h-4 text-[#337418] dark:text-[#5DD62C]" />
+            <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-[#5DD62C]/20 text-[#2D6614] dark:text-[#5DD62C] border border-[#5DD62C]/50">
               Verified
             </span>
           </div>
           <div>
-            <p className="text-[10px] font-medium opacity-70">Mobile Phone</p>
-            <p className="text-xs font-bold font-mono mt-0.5">{currentUser.phone || 'Connected'}</p>
+            <p className="text-[10px] text-[#64748B] dark:text-[#8B949E] font-medium">Mobile Phone</p>
+            <p className="text-xs font-bold text-[#0F0F0F] dark:text-[#F0F6FC] font-mono mt-0.5">{currentUser.phone || 'Connected'}</p>
           </div>
         </div>
 
-        {/* Theme & Appearance Toggle Button */}
-        <div className={`p-3.5 rounded-2xl border shadow-xs flex flex-col justify-between h-28 ${
-          isDark ? 'bg-[#111827] border-[#1E293B]' : 'bg-[#FFFFFF] border-[#E2E8F0]'
-        }`}>
+        {/* Theme & Appearance Toggle */}
+        <div
+          onClick={toggleTheme}
+          className="p-3.5 rounded-2xl bg-[#FFFFFF] dark:bg-[#161B22] border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between h-28 cursor-pointer hover:border-[#5DD62C] transition"
+        >
           <div className="flex items-center justify-between">
-            {isDark ? <Moon className="w-4 h-4 text-[#5DD62C]" /> : <Sun className="w-4 h-4 text-amber-500" />}
-            <button
-              onClick={toggleTheme}
-              type="button"
-              className={`px-2.5 py-1 rounded-xl text-[10px] font-black flex items-center gap-1 transition active:scale-95 cursor-pointer shadow-xs border ${
-                isDark
-                  ? 'bg-[#5DD62C] text-[#0B0F17] border-[#5DD62C]'
-                  : 'bg-[#0F172A] text-[#F8FAFC] border-[#0F172A]'
-              }`}
-            >
-              {isDark ? 'Switch Light' : 'Switch Dark'}
-            </button>
+            {themeMode === 'dark' ? (
+              <Moon className="w-4 h-4 text-[#5DD62C]" />
+            ) : (
+              <Sun className="w-4 h-4 text-amber-500" />
+            )}
+            <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md border ${
+              themeMode === 'dark'
+                ? 'bg-[#5DD62C]/20 text-[#5DD62C] border-[#5DD62C]/50'
+                : 'bg-amber-100 text-amber-800 border-amber-300'
+            }`}>
+              {themeMode === 'dark' ? 'Dark' : 'Light'}
+            </span>
           </div>
           <div>
-            <p className="text-[10px] font-medium opacity-70">Visual Theme</p>
-            <p className={`text-xs font-black mt-0.5 ${isDark ? 'text-[#5DD62C]' : 'text-amber-600'}`}>
-              {isDark ? 'Dark Mode Active' : 'Light Mode Active'}
+            <p className="text-[10px] text-[#64748B] dark:text-[#8B949E] font-medium">Visual Theme</p>
+            <p className="text-xs font-black text-[#0F0F0F] dark:text-[#F0F6FC] mt-0.5 flex items-center justify-between">
+              <span>{themeMode === 'dark' ? 'Dark Mode' : 'Light Mode'}</span>
+              <span className="text-[10px] text-[#337418] dark:text-[#5DD62C]">Toggle ➔</span>
             </p>
           </div>
         </div>
@@ -160,7 +147,7 @@ export const ProfileScreen: React.FC = () => {
       <div className="rounded-2xl overflow-hidden">
         <button
           onClick={logout}
-          className="w-full py-3 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/30 font-extrabold text-xs flex items-center justify-center gap-2 transition active:scale-98 shadow-xs cursor-pointer"
+          className="w-full py-3 rounded-2xl bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 font-extrabold text-xs flex items-center justify-center gap-2 transition active:scale-98 shadow-xs cursor-pointer"
         >
           <LogOut className="w-4 h-4" />
           <span>Sign Out of Technova Connect</span>

@@ -32,8 +32,8 @@ import { ProfileScreen } from '@/components/screens/ProfileScreen';
 import { NotificationsScreen } from '@/components/screens/NotificationsScreen';
 
 export default function Home() {
-  const { currentScreen, currentUser, theme } = useApp();
-  const isLight = theme === 'light';
+  const { currentScreen, currentUser, themeMode } = useApp();
+  const isLight = themeMode === 'light';
 
   // 3-Second Page Open Shining TECHNOVA Loader State
   const [initialLoading, setInitialLoading] = useState(true);

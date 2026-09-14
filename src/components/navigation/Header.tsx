@@ -2,33 +2,27 @@
 
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
-import { Settings, Shield, Bell, Check, User, Sliders, Moon, Sun, LogOut } from 'lucide-react';
+import { Settings, Bell, Sliders, Moon, Sun } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 
 export const Header: React.FC = () => {
-  const { currentUser, navigateTo, notifications, logout, theme, toggleTheme } = useApp();
+  const { currentUser, navigateTo, notifications, themeMode, toggleTheme } = useApp();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   if (!currentUser) return null;
 
   const unreadNotifs = notifications.filter(n => !n.is_read).length;
-  const isDark = theme === 'dark';
 
   return (
     <>
-      {/* Header Bar */}
-      <header className={`sticky top-0 z-40 px-4 py-3 border-b shadow-md font-sans transition-colors duration-300 ${
-        isDark ? 'bg-[#090D16] border-[#1E293B]' : 'bg-[#FFFFFF] border-[#E2E8F0]'
-      }`}>
+      {/* Sleek Dark Charcoal Header Bar (#0F0F0F) */}
+      <header className="sticky top-0 z-40 bg-[#0F0F0F] px-4 py-3 border-b border-[#202020] shadow-sm">
         <div className="max-w-md mx-auto flex items-center justify-between">
           
           {/* Clean TECHNOVA Text Logo */}
-          <div className="flex items-center gap-2">
-            <span className={`text-lg font-black tracking-wider uppercase flex items-center gap-1.5 ${
-              isDark ? 'text-[#F8FAFC]' : 'text-[#0F172A]'
-            }`}>
+          <div className="flex items-center">
+            <span className="text-lg font-black text-[#F8F8F8] tracking-wider uppercase">
               TECHNOVA
-              <span className="w-2 h-2 rounded-full bg-[#5DD62C] animate-pulse" />
             </span>
           </div>
 
@@ -36,9 +30,7 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-1">
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className={`p-2 rounded-xl transition active:scale-95 flex items-center gap-1.5 cursor-pointer ${
-                isDark ? 'text-[#CBD5E1] hover:bg-[#1E293B] hover:text-[#5DD62C]' : 'text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
-              }`}
+              className="p-2 rounded-xl text-[#F8F8F8] hover:bg-[#202020] hover:text-[#5DD62C] transition active:scale-95 flex items-center gap-1.5 cursor-pointer"
               title="Settings"
             >
               <Settings className="w-5 h-5" />
@@ -57,107 +49,89 @@ export const Header: React.FC = () => {
         <div className="space-y-4 text-xs font-sans">
           
           {/* Current User Profile Card */}
-          <div className={`p-3.5 rounded-2xl border flex items-center gap-3 ${
-            isDark ? 'bg-[#1E293B]/70 border-[#334155] text-[#F8FAFC]' : 'bg-[#F8FAFC] border-[#E2E8F0] text-[#0F172A]'
-          }`}>
+          <div className="p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#161B22] border border-slate-200 dark:border-slate-800 flex items-center gap-3">
             <img
               src={currentUser.avatar_url}
               alt={currentUser.full_name}
-              className="w-11 h-11 rounded-full object-cover border-2 border-[#5DD62C]"
+              className="w-10 h-10 rounded-full object-cover border border-[#5DD62C]"
             />
             <div className="min-w-0 flex-1">
-              <h4 className="text-xs font-black truncate">{currentUser.full_name}</h4>
-              <p className="text-[11px] opacity-70 truncate">{currentUser.college_name || currentUser.phone}</p>
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-[#5DD62C]/20 text-[#337418] dark:text-[#5DD62C] border border-[#5DD62C]/40 uppercase tracking-wider inline-block mt-1">
+              <h4 className="text-xs font-black text-[#0F0F0F] dark:text-[#F0F6FC] truncate">{currentUser.full_name}</h4>
+              <p className="text-[11px] text-[#64748B] dark:text-[#8B949E] truncate">{currentUser.college_name || currentUser.phone}</p>
+              <span className="text-[10px] font-extrabold text-[#337418] dark:text-[#5DD62C] uppercase tracking-wider block mt-0.5 capitalize">
                 Role: {currentUser.role}
               </span>
             </div>
           </div>
 
-          {/* Preferences Section */}
+          {/* Preferences & Theme Section */}
           <div>
-            <h5 className={`text-[11px] font-extrabold uppercase tracking-wider mb-2 flex items-center gap-1.5 ${
-              isDark ? 'text-[#CBD5E1]' : 'text-[#64748B]'
-            }`}>
-              <Sliders className="w-3.5 h-3.5 text-[#5DD62C]" />
+            <h5 className="text-[11px] font-extrabold text-[#0F0F0F] dark:text-[#F0F6FC] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <Sliders className="w-3.5 h-3.5 text-[#337418] dark:text-[#5DD62C]" />
               <span>Preferences</span>
             </h5>
+            
             <div className="space-y-2">
+              
+              {/* Notifications Center button */}
               <button
                 onClick={() => {
                   setIsSettingsOpen(false);
                   navigateTo('notifications');
                 }}
-                className={`w-full p-3 rounded-xl border flex items-center justify-between text-xs font-bold transition cursor-pointer ${
-                  isDark ? 'border-[#334155] bg-[#1E293B]/60 hover:bg-[#1E293B] text-[#F8FAFC]' : 'border-[#E2E8F0] bg-[#F8FAFC] hover:bg-[#F1F5F9] text-[#0F172A]'
-                }`}
+                className="w-full p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-[#FFFFFF] dark:bg-[#161B22] hover:bg-slate-50 dark:hover:bg-slate-800/60 flex items-center justify-between text-xs font-bold text-[#0F0F0F] dark:text-[#F0F6FC] transition cursor-pointer"
               >
                 <div className="flex items-center gap-2">
-                  <Bell className="w-4 h-4 text-[#5DD62C]" />
+                  <Bell className="w-4 h-4 text-[#337418] dark:text-[#5DD62C]" />
                   <span>Notifications Center</span>
                 </div>
                 {unreadNotifs > 0 && (
-                  <span className="px-2 py-0.5 rounded-full bg-[#5DD62C] text-[#0B0F17] text-[10px] font-black">
+                  <span className="px-2 py-0.5 rounded-full bg-[#5DD62C] text-[#0F0F0F] text-[10px] font-extrabold">
                     {unreadNotifs} Unread
                   </span>
                 )}
               </button>
 
-              {/* Theme Switcher Toggle Row */}
-              <div className={`p-3 rounded-xl border flex items-center justify-between text-xs font-bold transition ${
-                isDark ? 'border-[#334155] bg-[#1E293B]/60 text-[#F8FAFC]' : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#0F172A]'
-              }`}>
+              {/* Interactive Theme Mode Switcher */}
+              <div className="p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-[#FFFFFF] dark:bg-[#161B22] flex items-center justify-between text-xs font-bold text-[#0F0F0F] dark:text-[#F0F6FC]">
                 <div className="flex items-center gap-2">
-                  {isDark ? <Moon className="w-4 h-4 text-[#5DD62C]" /> : <Sun className="w-4 h-4 text-amber-500" />}
-                  <span>Appearance</span>
+                  {themeMode === 'dark' ? (
+                    <Moon className="w-4 h-4 text-[#5DD62C]" />
+                  ) : (
+                    <Sun className="w-4 h-4 text-amber-500" />
+                  )}
+                  <span>Theme Mode</span>
                 </div>
 
-                {/* Dynamic Light/Dark Mode Switch Button */}
                 <button
                   onClick={toggleTheme}
-                  type="button"
-                  className={`px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-xs border ${
-                    isDark
-                      ? 'bg-[#5DD62C] text-[#0B0F17] border-[#5DD62C]'
-                      : 'bg-[#0F172A] text-[#F8FAFC] border-[#0F172A]'
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer flex items-center gap-1.5 shadow-xs ${
+                    themeMode === 'dark'
+                      ? 'bg-[#5DD62C] text-[#0F0F0F]'
+                      : 'bg-slate-100 text-[#0F0F0F] border border-slate-300'
                   }`}
                 >
-                  {isDark ? (
+                  {themeMode === 'dark' ? (
                     <>
-                      <Moon className="w-3.5 h-3.5 fill-current" />
+                      <Moon className="w-3.5 h-3.5" />
                       <span>Dark Mode</span>
                     </>
                   ) : (
                     <>
-                      <Sun className="w-3.5 h-3.5 text-amber-400 fill-current" />
+                      <Sun className="w-3.5 h-3.5 text-amber-500" />
                       <span>Light Mode</span>
                     </>
                   )}
                 </button>
               </div>
+
             </div>
           </div>
 
-          {/* Account Actions */}
-          <div className={`pt-2 border-t ${isDark ? 'border-[#334155]' : 'border-[#E2E8F0]'}`}>
-            <button
-              onClick={() => {
-                setIsSettingsOpen(false);
-                logout();
-              }}
-              className="w-full p-3 rounded-xl border border-rose-500/40 bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 font-extrabold text-xs flex items-center justify-center gap-2 transition cursor-pointer active:scale-95"
-            >
-              <LogOut className="w-4 h-4" />
-              <span>Sign Out of Technova</span>
-            </button>
-          </div>
-
           {/* App Metadata */}
-          <div className={`pt-2 border-t flex items-center justify-between text-[10px] font-mono ${
-            isDark ? 'border-[#334155] text-[#94A3B8]' : 'border-[#E2E8F0] text-[#64748B]'
-          }`}>
+          <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[10px] text-[#64748B] dark:text-[#8B949E] font-mono">
             <span>Technova Connect v2.6.0</span>
-            <span className="text-[#5DD62C] font-bold">Theme: {theme.toUpperCase()}</span>
+            <span className="text-[#337418] dark:text-[#5DD62C] font-bold">All Systems Operational</span>
           </div>
 
         </div>

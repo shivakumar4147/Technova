@@ -19,14 +19,14 @@ export const PrivateChatScreen: React.FC = () => {
   const chatMessages = messages[conversation.id] || [];
 
   return (
-    <div className="min-h-[calc(100vh-120px)] max-w-md mx-auto flex flex-col text-white relative">
+    <div className="min-h-[calc(100vh-120px)] max-w-md mx-auto flex flex-col bg-[#F8F8F8] dark:bg-[#0D1117] text-[#0F0F0F] dark:text-[#F0F6FC] font-sans transition-colors duration-200 relative">
       
       {/* 1. STICKY HEADER (Fixed at top, shrink-0) */}
-      <header className="shrink-0 z-40 glass-level3 px-3.5 py-3 flex items-center justify-between border-b border-slate-700/60 shadow-lg">
+      <header className="shrink-0 z-40 bg-[#FFFFFF] dark:bg-[#161B22] px-3.5 py-3 flex items-center justify-between border-b border-[#E2E8F0] dark:border-slate-800 shadow-xs">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigateTo('chat_home')}
-            className="p-1.5 rounded-xl text-slate-300 hover:bg-slate-800/80 transition active:scale-95"
+            className="p-1.5 rounded-xl text-[#0F0F0F] dark:text-[#F0F6FC] hover:bg-slate-100 dark:hover:bg-slate-800 transition active:scale-95 cursor-pointer"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -36,22 +36,22 @@ export const PrivateChatScreen: React.FC = () => {
               <img
                 src={conversation.avatar_url}
                 alt={conversation.name}
-                className="w-9 h-9 rounded-2xl object-cover border border-slate-700/80"
+                className="w-9 h-9 rounded-2xl object-cover border border-slate-200 dark:border-slate-800"
               />
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-[#070A11]" />
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-[#161B22]" />
             </div>
             <div>
-              <h2 className="text-xs font-extrabold text-white truncate max-w-[160px] leading-tight">{conversation.name}</h2>
-              <p className="text-[10px] text-emerald-400 font-semibold mt-0.5">Online</p>
+              <h2 className="text-xs font-black text-[#0F0F0F] dark:text-[#F0F6FC] truncate max-w-[160px] leading-tight">{conversation.name}</h2>
+              <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">Online</p>
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-1">
-          <button className="p-2 rounded-xl text-slate-300 hover:bg-slate-800/80 transition active:scale-95">
+          <button className="p-2 rounded-xl text-[#64748B] dark:text-[#8B949E] hover:bg-slate-100 dark:hover:bg-slate-800 transition active:scale-95 cursor-pointer">
             <Phone className="w-4 h-4" />
           </button>
-          <button className="p-2 rounded-xl text-slate-300 hover:bg-slate-800/80 transition active:scale-95">
+          <button className="p-2 rounded-xl text-[#64748B] dark:text-[#8B949E] hover:bg-slate-100 dark:hover:bg-slate-800 transition active:scale-95 cursor-pointer">
             <MoreVertical className="w-4 h-4" />
           </button>
         </div>
@@ -68,17 +68,19 @@ export const PrivateChatScreen: React.FC = () => {
               className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} my-1`}
             >
               <div
-                className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-xs leading-relaxed shadow-sm ${
+                className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-xs leading-relaxed shadow-xs ${
                   isMe
-                    ? 'bg-cyan-500/20 border border-cyan-500/40 text-white rounded-br-xs'
-                    : 'glass-level1 text-slate-200 rounded-bl-xs'
+                    ? 'bg-[#5DD62C] text-[#0F0F0F] font-medium rounded-br-xs'
+                    : 'bg-[#FFFFFF] dark:bg-[#161B22] border border-slate-200 dark:border-slate-800 text-[#0F0F0F] dark:text-[#F0F6FC] rounded-bl-xs'
                 }`}
               >
                 <p>{msg.content}</p>
 
-                <div className="flex items-center justify-end gap-1 mt-1.5 text-[9px] text-slate-400 font-mono">
+                <div className={`flex items-center justify-end gap-1 mt-1.5 text-[9px] font-mono ${
+                  isMe ? 'text-[#0F0F0F]/70' : 'text-[#64748B] dark:text-[#8B949E]'
+                }`}>
                   <span>{msg.created_at}</span>
-                  {isMe && <CheckCheck className="w-3 h-3 text-cyan-400" />}
+                  {isMe && <CheckCheck className="w-3 h-3 text-[#0F0F0F]" />}
                 </div>
               </div>
             </div>
@@ -86,8 +88,8 @@ export const PrivateChatScreen: React.FC = () => {
         })}
       </main>
 
-      {/* 3. STICKY COMPOSER (Fixed at bottom, shrink-0, zero overlap) */}
-      <footer className="shrink-0 z-40 bg-[#070A11]/90 backdrop-blur-xl border-t border-slate-800">
+      {/* 3. STICKY COMPOSER */}
+      <footer className="shrink-0 z-40 bg-[#FFFFFF] dark:bg-[#161B22] border-t border-slate-200 dark:border-slate-800">
         <MessageComposer
           onSendMessage={(text) => sendMessage(conversation.id, text)}
           placeholder={`Message ${conversation.name}...`}

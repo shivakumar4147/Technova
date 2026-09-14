@@ -36,9 +36,8 @@ interface AppContextType {
   notifications: NotificationItem[];
   auditLogs: AuditLogItem[];
   pendingPhone: string;
-  theme: 'light' | 'dark';
+  themeMode: 'light' | 'dark';
   toggleTheme: () => void;
-  setTheme: (theme: 'light' | 'dark') => void;
   
   // Navigation & User
   navigateTo: (screen: string, params?: any) => void;
@@ -92,44 +91,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentScreen, setCurrentScreen] = useState<string>('login');
   const [screenParams, setScreenParams] = useState<any>({});
   const [pendingPhone, setPendingPhone] = useState<string>('+919800011122');
-  const [theme, setThemeState] = useState<'light' | 'dark'>(() => {
+  
+  const [themeMode, setThemeMode] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('technova_theme');
+      const savedTheme = localStorage.getItem('technova_theme_mode');
       if (savedTheme === 'dark' || savedTheme === 'light') return savedTheme;
     }
     return 'light';
   });
 
-  const setTheme = (newTheme: 'light' | 'dark') => {
-    setThemeState(newTheme);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('technova_theme', newTheme);
-      if (newTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
-      } else {
-        document.documentElement.classList.add('light');
-        document.documentElement.classList.remove('dark');
-      }
-    }
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      if (theme === 'dark') {
+      localStorage.setItem('technova_theme_mode', themeMode);
+      if (themeMode === 'dark') {
         document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
       } else {
-        document.documentElement.classList.add('light');
         document.documentElement.classList.remove('dark');
       }
     }
-  }, [theme]);
-  
+  }, [themeMode]);
+
+  const toggleTheme = () => {
+    setThemeMode(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   const [colleges, setColleges] = useState<College[]>(INITIAL_COLLEGES);
   const [profiles, setProfiles] = useState<UserProfile[]>(INITIAL_PROFILES);
   const [conversations, setConversations] = useState<Conversation[]>(INITIAL_CONVERSATIONS);
@@ -918,9 +903,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         notifications,
         auditLogs,
         pendingPhone,
-        theme,
+        themeMode,
         toggleTheme,
-        setTheme,
         navigateTo,
         setCurrentUser,
         switchUserRole,

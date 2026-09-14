@@ -5,7 +5,7 @@ import { useApp } from '@/context/AppContext';
 import { ShieldAlert, ArrowRight, Camera } from 'lucide-react';
 
 export const ProfileSetupScreen: React.FC = () => {
-  const { currentUser, colleges, createCollege, completeProfile, screenParams } = useApp();
+  const { currentUser, colleges, completeProfile, screenParams } = useApp();
   
   const [fullName, setFullName] = useState(currentUser?.full_name || screenParams?.full_name || '');
   const [displayName, setDisplayName] = useState(currentUser?.display_name || currentUser?.full_name || screenParams?.full_name || '');
@@ -98,59 +98,59 @@ export const ProfileSetupScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F17] flex flex-col justify-center items-center px-4 py-4 sm:py-6 text-[#F8FAFC] overflow-y-auto font-sans">
+    <div className="min-h-screen bg-[#F8F8F8] dark:bg-[#0D1117] flex flex-col justify-center items-center px-4 py-4 sm:py-6 text-[#0F0F0F] dark:text-[#F0F6FC] font-sans transition-colors duration-200 overflow-y-auto">
       <div className="max-w-md mx-auto w-full my-auto">
         
         <div className="mb-3 text-center">
-          <h2 className="text-xl sm:text-2xl font-black text-[#F8FAFC]">
+          <h2 className="text-xl sm:text-2xl font-black text-[#0F0F0F] dark:text-[#F0F6FC]">
             {currentUser?.is_profile_complete ? 'Edit Profile' : 'Complete Profile'}
           </h2>
-          <p className="text-[11px] text-[#94A3B8] font-medium mt-0.5">
+          <p className="text-[11px] text-[#64748B] dark:text-[#8B949E] font-medium mt-0.5">
             {currentUser?.is_profile_complete ? 'Update your account preferences & details' : 'Set up your identity for Technova 2026'}
           </p>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#111827] border border-[#1E293B] shadow-lg space-y-3 max-h-[80vh] overflow-y-auto">
+        <div className="p-4 sm:p-5 rounded-2xl bg-[#FFFFFF] dark:bg-[#161B22] border border-slate-200 dark:border-slate-800 shadow-xs space-y-3 max-h-[80vh] overflow-y-auto">
           <form onSubmit={handleSubmit} className="space-y-3">
             
             {/* Avatar Selector */}
             <div className="flex flex-col items-center mb-2">
               <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-[#5DD62C] p-0.5 shadow-xs">
                 <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover rounded-full" />
-                <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 hover:opacity-100 transition cursor-pointer">
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition cursor-pointer">
                   <Camera className="w-4 h-4 text-white" />
                 </div>
               </div>
-              <span className="text-[10px] text-[#94A3B8] font-bold mt-1">Profile Photo</span>
+              <span className="text-[10px] text-[#64748B] dark:text-[#8B949E] font-bold mt-1">Profile Photo</span>
             </div>
 
             <div>
-              <label className="block text-xs font-extrabold text-[#F8FAFC] mb-0.5">Full Name *</label>
+              <label className="block text-xs font-extrabold text-[#0F0F0F] dark:text-[#F0F6FC] mb-0.5">Full Name *</label>
               <input
                 type="text"
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="e.g. Dr. Anand Sharma"
-                className="w-full bg-[#1E293B] border border-[#334155] rounded-xl px-3 py-2 text-sm font-bold text-[#F8FAFC] placeholder-[#94A3B8] focus:border-[#5DD62C] focus:outline-none"
+                className="w-full bg-[#F8FAFC] dark:bg-[#0D1117] border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-sm font-bold text-[#0F0F0F] dark:text-[#F0F6FC] placeholder-slate-400 focus:border-[#5DD62C] focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-extrabold text-[#F8FAFC] mb-0.5">Display Name (In Chat)</label>
+              <label className="block text-xs font-extrabold text-[#0F0F0F] dark:text-[#F0F6FC] mb-0.5">Display Name (In Chat)</label>
               <input
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="e.g. Anand Sharma"
-                className="w-full bg-[#1E293B] border border-[#334155] rounded-xl px-3 py-2 text-sm font-bold text-[#F8FAFC] placeholder-[#94A3B8] focus:border-[#5DD62C] focus:outline-none"
+                className="w-full bg-[#F8FAFC] dark:bg-[#0D1117] border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-sm font-bold text-[#0F0F0F] dark:text-[#F0F6FC] placeholder-slate-400 focus:border-[#5DD62C] focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-extrabold text-[#F8FAFC] mb-0.5">Mobile Phone Number *</label>
-              <div className="flex items-center rounded-xl bg-[#1E293B] border border-[#334155] focus-within:border-[#5DD62C] transition overflow-hidden">
-                <span className="px-3 text-xs font-extrabold text-[#F8FAFC] bg-[#334155] py-2 border-r border-[#475569]">
+              <label className="block text-xs font-extrabold text-[#0F0F0F] dark:text-[#F0F6FC] mb-0.5">Mobile Phone Number *</label>
+              <div className="flex items-center rounded-xl bg-[#F8FAFC] dark:bg-[#0D1117] border border-slate-300 dark:border-slate-800 focus-within:border-[#5DD62C] transition overflow-hidden">
+                <span className="px-3 text-xs font-extrabold text-[#0F0F0F] dark:text-[#F0F6FC] bg-slate-100 dark:bg-slate-800 py-2 border-r border-slate-300 dark:border-slate-800">
                   +91
                 </span>
                 <input
@@ -163,26 +163,26 @@ export const ProfileSetupScreen: React.FC = () => {
                     if (e.target.value.length >= 10) setError('');
                   }}
                   placeholder="Enter 10-digit mobile number"
-                  className="w-full bg-transparent px-3 py-2 text-sm font-bold text-[#F8FAFC] placeholder-[#94A3B8] focus:outline-none"
+                  className="w-full bg-transparent px-3 py-2 text-sm font-bold text-[#0F0F0F] dark:text-[#F0F6FC] placeholder-slate-400 focus:outline-none"
                 />
               </div>
             </div>
 
-            {/* Google Email Info (Read-only if present) */}
+            {/* Google Email Info */}
             {screenParams?.email && (
               <div>
-                <label className="block text-xs font-extrabold text-[#F8FAFC] mb-0.5">Gmail Account</label>
+                <label className="block text-xs font-extrabold text-[#0F0F0F] dark:text-[#F0F6FC] mb-0.5">Gmail Account</label>
                 <input
                   type="email"
                   disabled
                   value={screenParams.email}
-                  className="w-full bg-[#1E293B]/60 border border-[#334155] rounded-xl px-3 py-2 text-xs font-bold text-[#94A3B8] cursor-not-allowed"
+                  className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-500 dark:text-slate-400 cursor-not-allowed"
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-extrabold text-[#F8FAFC] mb-0.5">PU College / Institution *</label>
+              <label className="block text-xs font-extrabold text-[#0F0F0F] dark:text-[#F0F6FC] mb-0.5">PU College / Institution *</label>
               <select
                 required
                 value={selectedCollege}
@@ -190,15 +190,15 @@ export const ProfileSetupScreen: React.FC = () => {
                   setSelectedCollege(e.target.value);
                   if (e.target.value) setError('');
                 }}
-                className="w-full bg-[#1E293B] border border-[#334155] rounded-xl px-3 py-2 text-xs sm:text-sm font-bold text-[#F8FAFC] focus:border-[#5DD62C] focus:outline-none"
+                className="w-full bg-[#F8FAFC] dark:bg-[#0D1117] border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold text-[#0F0F0F] dark:text-[#F0F6FC] focus:border-[#5DD62C] focus:outline-none"
               >
-                <option value="" className="bg-[#111827] text-[#94A3B8]">Select your PU College...</option>
+                <option value="" className="text-slate-400">Select your PU College...</option>
                 {colleges.map(c => (
-                  <option key={c.id} value={c.id} className="bg-[#111827] text-[#F8FAFC]">
+                  <option key={c.id} value={c.id} className="bg-[#FFFFFF] dark:bg-[#161B22] text-[#0F0F0F] dark:text-[#F0F6FC]">
                     {c.name}
                   </option>
                 ))}
-                <option value="OTHER" className="bg-[#111827] text-[#5DD62C] font-black">
+                <option value="OTHER" className="bg-[#FFFFFF] dark:bg-[#161B22] text-[#337418] dark:text-[#5DD62C] font-black">
                   ➕ Other (Type PU College manually...)
                 </option>
               </select>
@@ -206,7 +206,7 @@ export const ProfileSetupScreen: React.FC = () => {
 
             {selectedCollege === 'OTHER' && (
               <div>
-                <label className="block text-xs font-extrabold text-[#F8FAFC] mb-0.5">Type PU College Name *</label>
+                <label className="block text-xs font-extrabold text-[#0F0F0F] dark:text-[#F0F6FC] mb-0.5">Type PU College Name *</label>
                 <input
                   type="text"
                   required
@@ -216,44 +216,44 @@ export const ProfileSetupScreen: React.FC = () => {
                     if (e.target.value) setError('');
                   }}
                   placeholder="e.g. Sharada PU College / Canara PU College"
-                  className="w-full bg-[#1E293B] border border-[#334155] rounded-xl px-3 py-2 text-sm font-bold text-[#F8FAFC] placeholder-[#94A3B8] focus:border-[#5DD62C] focus:outline-none"
+                  className="w-full bg-[#F8FAFC] dark:bg-[#0D1117] border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-sm font-bold text-[#0F0F0F] dark:text-[#F0F6FC] placeholder-slate-400 focus:border-[#5DD62C] focus:outline-none"
                 />
               </div>
             )}
 
-            {error && <p className="text-xs text-rose-400 font-bold">{error}</p>}
+            {error && <p className="text-xs text-rose-600 dark:text-rose-400 font-bold">{error}</p>}
 
             <div>
-              <label className="block text-xs font-extrabold text-[#F8FAFC] mb-0.5">Designation</label>
+              <label className="block text-xs font-extrabold text-[#0F0F0F] dark:text-[#F0F6FC] mb-0.5">Designation</label>
               <input
                 type="text"
                 value={designation}
                 onChange={(e) => setDesignation(e.target.value)}
                 placeholder="e.g. CS Lecturer / Faculty Lead"
-                className="w-full bg-[#1E293B] border border-[#334155] rounded-xl px-3 py-2 text-sm font-bold text-[#F8FAFC] placeholder-[#94A3B8] focus:border-[#5DD62C] focus:outline-none"
+                className="w-full bg-[#F8FAFC] dark:bg-[#0D1117] border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-sm font-bold text-[#0F0F0F] dark:text-[#F0F6FC] placeholder-slate-400 focus:border-[#5DD62C] focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-extrabold text-[#F8FAFC] mb-0.5">Optional Bio</label>
+              <label className="block text-xs font-extrabold text-[#0F0F0F] dark:text-[#F0F6FC] mb-0.5">Optional Bio</label>
               <textarea
                 rows={2}
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Short bio or team details..."
-                className="w-full bg-[#1E293B] border border-[#334155] rounded-xl px-3 py-2 text-xs font-bold text-[#F8FAFC] placeholder-[#94A3B8] focus:border-[#5DD62C] focus:outline-none"
+                className="w-full bg-[#F8FAFC] dark:bg-[#0D1117] border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-[#0F0F0F] dark:text-[#F0F6FC] placeholder-slate-400 focus:border-[#5DD62C] focus:outline-none"
               />
             </div>
 
             {/* Role Notice */}
-            <div className="p-2.5 rounded-xl bg-[#1E293B]/70 border border-[#334155] flex items-start gap-2 text-[11px] text-[#94A3B8]">
-              <ShieldAlert className="w-3.5 h-3.5 text-[#5DD62C] shrink-0 mt-0.5" />
+            <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#0D1117] border border-slate-200 dark:border-slate-800 flex items-start gap-2 text-[11px] text-[#64748B] dark:text-[#8B949E]">
+              <ShieldAlert className="w-3.5 h-3.5 text-[#337418] dark:text-[#5DD62C] shrink-0 mt-0.5" />
               <span>Roles (Coordinator/Admin) are assigned strictly by Technova Admins. Default access is Teacher.</span>
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-[#5DD62C] hover:bg-[#50b925] text-[#0B0F17] font-black text-sm shadow-md flex items-center justify-center gap-2 active:scale-[0.98] transition cursor-pointer sticky bottom-0 z-10"
+              className="w-full py-3 rounded-xl bg-[#5DD62C] hover:bg-[#50b925] text-[#0F0F0F] font-extrabold text-sm shadow-xs flex items-center justify-center gap-2 active:scale-[0.98] transition cursor-pointer sticky bottom-0 z-10"
             >
               <span>{currentUser?.is_profile_complete ? 'Update Profile' : 'Save & Enter App'}</span>
               <ArrowRight className="w-4 h-4" />
