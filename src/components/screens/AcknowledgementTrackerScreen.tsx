@@ -22,20 +22,20 @@ export const AcknowledgementTrackerScreen: React.FC = () => {
   };
 
   return (
-    <div className="pb-24 pt-3 px-4 max-w-md mx-auto min-h-screen">
+    <div className="pb-24 pt-3 px-4 max-w-md mx-auto min-h-screen bg-[#0B0F17] font-sans text-[#F8FAFC]">
       
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigateTo('group_chat')}
-            className="p-1.5 rounded-xl text-slate-300 hover:bg-slate-800/80 transition"
+            className="p-1.5 rounded-xl text-[#F8FAFC] hover:bg-[#1E293B] transition cursor-pointer"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h2 className="text-base font-bold text-white">Acknowledgement Tracker</h2>
-            <p className="text-[10px] text-slate-400">Real-time announcement receipt control</p>
+            <h2 className="text-base font-black text-[#F8FAFC]">Acknowledgement Tracker</h2>
+            <p className="text-[10px] text-[#94A3B8]">Real-time announcement receipt control</p>
           </div>
         </div>
 
@@ -45,27 +45,27 @@ export const AcknowledgementTrackerScreen: React.FC = () => {
       </div>
 
       {/* Announcement Summary Card */}
-      <GlassCard variant="bright" className="p-4 border-cyan-500/40 mb-4">
+      <div className="p-4 rounded-2xl bg-[#111827] border border-[#1E293B] shadow-md mb-4">
         <div className="flex items-start justify-between mb-2">
-          <h3 className="text-sm font-extrabold text-white">{ann.title}</h3>
-          <span className="text-[10px] text-slate-400 font-mono">{ann.created_at}</span>
+          <h3 className="text-sm font-extrabold text-[#F8FAFC]">{ann.title}</h3>
+          <span className="text-[10px] text-[#94A3B8] font-mono">{ann.created_at}</span>
         </div>
 
-        <p className="text-xs text-slate-300 mb-3">{ann.content}</p>
+        <p className="text-xs text-[#94A3B8] mb-3">{ann.content}</p>
 
         {/* Real-time Progress Bar */}
         <div>
           <div className="flex items-center justify-between text-xs mb-1">
-            <span className="font-bold text-emerald-400 flex items-center gap-1">
+            <span className="font-bold text-[#5DD62C] flex items-center gap-1">
               <CheckCircle2 className="w-3.5 h-3.5" />
               <span>{ann.acknowledged_count} of {ann.sent_to_count} Teachers Acknowledged</span>
             </span>
-            <span className="font-extrabold text-cyan-400 font-mono">{percentAck}%</span>
+            <span className="font-extrabold text-[#5DD62C] font-mono">{percentAck}%</span>
           </div>
 
-          <div className="h-2.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800 p-0.5">
+          <div className="h-2.5 bg-[#1E293B] rounded-full overflow-hidden border border-[#334155] p-0.5">
             <div
-              className="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 rounded-full transition-all duration-500 shadow-[0_0_10px_#00F0FF]"
+              className="h-full bg-[#5DD62C] rounded-full transition-all duration-500 shadow-[0_0_10px_#5DD62C]"
               style={{ width: `${percentAck}%` }}
             />
           </div>
@@ -73,8 +73,8 @@ export const AcknowledgementTrackerScreen: React.FC = () => {
 
         {/* 1-Click Reminder Button */}
         {ann.pending_users.length > 0 && (
-          <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span className="text-[11px] text-amber-300 font-semibold flex items-center gap-1">
+          <div className="mt-4 pt-3 border-t border-[#1E293B] flex items-center justify-between">
+            <span className="text-[11px] text-amber-400 font-semibold flex items-center gap-1">
               <AlertCircle className="w-3.5 h-3.5" />
               <span>{ann.pending_users.length} teacher pending receipt</span>
             </span>
@@ -82,10 +82,10 @@ export const AcknowledgementTrackerScreen: React.FC = () => {
             <button
               onClick={handleReminder}
               disabled={reminderSent}
-              className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition ${
+              className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
                 reminderSent
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                  : 'bg-amber-500 hover:bg-amber-400 text-black shadow-md shadow-amber-500/20 active:scale-95'
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                  : 'bg-amber-500 hover:bg-amber-400 text-black shadow-xs active:scale-95'
               }`}
             >
               <BellRing className="w-3.5 h-3.5" />
@@ -93,36 +93,36 @@ export const AcknowledgementTrackerScreen: React.FC = () => {
             </button>
           </div>
         )}
-      </GlassCard>
+      </div>
 
       {/* Tabs */}
       <div className="flex items-center gap-2 mb-3">
         <button
           onClick={() => setActiveTab('all')}
-          className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+          className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
             activeTab === 'all'
-              ? 'bg-cyan-500 text-black font-bold'
-              : 'bg-slate-800/60 text-slate-400'
+              ? 'bg-[#5DD62C] text-[#0B0F17] font-black'
+              : 'bg-[#1E293B] text-[#94A3B8] hover:text-[#F8FAFC]'
           }`}
         >
           All ({ann.sent_to_count})
         </button>
         <button
           onClick={() => setActiveTab('acknowledged')}
-          className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+          className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
             activeTab === 'acknowledged'
-              ? 'bg-emerald-500 text-black font-bold'
-              : 'bg-slate-800/60 text-slate-400'
+              ? 'bg-[#5DD62C] text-[#0B0F17] font-black'
+              : 'bg-[#1E293B] text-[#94A3B8] hover:text-[#F8FAFC]'
           }`}
         >
           ✓ Acknowledged ({ann.acknowledged_count})
         </button>
         <button
           onClick={() => setActiveTab('pending')}
-          className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+          className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
             activeTab === 'pending'
-              ? 'bg-amber-500 text-black font-bold'
-              : 'bg-slate-800/60 text-slate-400'
+              ? 'bg-amber-500 text-black font-black'
+              : 'bg-[#1E293B] text-[#94A3B8] hover:text-[#F8FAFC]'
           }`}
         >
           ⚠ Pending ({ann.pending_users.length})
@@ -135,14 +135,14 @@ export const AcknowledgementTrackerScreen: React.FC = () => {
         {/* Acknowledged Teachers */}
         {(activeTab === 'all' || activeTab === 'acknowledged') &&
           ann.acknowledgements.map((ack, idx) => (
-            <GlassCard key={idx} className="p-3 flex items-center justify-between border-emerald-500/20 bg-slate-900/60">
+            <div key={idx} className="p-3 rounded-2xl bg-[#111827] border border-[#1E293B] flex items-center justify-between shadow-xs">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                <div className="w-8 h-8 rounded-full bg-[#5DD62C]/20 text-[#5DD62C] flex items-center justify-center font-bold">
                   ✓
                 </div>
                 <div>
-                  <h5 className="text-xs font-bold text-white">{ack.user_name}</h5>
-                  <p className="text-[10px] text-slate-400">{ack.college_name}</p>
+                  <h5 className="text-xs font-bold text-[#F8FAFC]">{ack.user_name}</h5>
+                  <p className="text-[10px] text-[#94A3B8]">{ack.college_name}</p>
                 </div>
               </div>
 
@@ -150,22 +150,22 @@ export const AcknowledgementTrackerScreen: React.FC = () => {
                 <Badge variant="green" size="sm">
                   Acknowledged
                 </Badge>
-                <p className="text-[9px] text-slate-400 mt-0.5 font-mono">{ack.acknowledged_at}</p>
+                <p className="text-[9px] text-[#94A3B8] mt-0.5 font-mono">{ack.acknowledged_at}</p>
               </div>
-            </GlassCard>
+            </div>
           ))}
 
         {/* Pending Teachers */}
         {(activeTab === 'all' || activeTab === 'pending') &&
           ann.pending_users.map((p, idx) => (
-            <GlassCard key={idx} className="p-3 flex items-center justify-between border-amber-500/30 bg-amber-950/10">
+            <div key={idx} className="p-3 rounded-2xl bg-[#111827] border border-amber-500/30 flex items-center justify-between shadow-xs">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
                   ⚠
                 </div>
                 <div>
-                  <h5 className="text-xs font-bold text-white">{p.user_name}</h5>
-                  <p className="text-[10px] text-slate-400">{p.college_name}</p>
+                  <h5 className="text-xs font-bold text-[#F8FAFC]">{p.user_name}</h5>
+                  <p className="text-[10px] text-[#94A3B8]">{p.college_name}</p>
                 </div>
               </div>
 
@@ -175,13 +175,13 @@ export const AcknowledgementTrackerScreen: React.FC = () => {
                 </Badge>
                 <button
                   onClick={handleReminder}
-                  className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 hover:bg-amber-500/40 transition"
+                  className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 hover:bg-amber-500/40 transition cursor-pointer"
                   title="Send Direct Reminder"
                 >
                   <BellRing className="w-3.5 h-3.5" />
                 </button>
               </div>
-            </GlassCard>
+            </div>
           ))}
 
       </div>

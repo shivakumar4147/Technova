@@ -19,7 +19,7 @@ export const PrivateChatScreen: React.FC = () => {
   const chatMessages = messages[conversation.id] || [];
 
   return (
-    <div className="h-[100dvh] max-w-md mx-auto flex flex-col overflow-hidden text-white relative">
+    <div className="min-h-[calc(100vh-120px)] max-w-md mx-auto flex flex-col text-white relative">
       
       {/* 1. STICKY HEADER (Fixed at top, shrink-0) */}
       <header className="shrink-0 z-40 glass-level3 px-3.5 py-3 flex items-center justify-between border-b border-slate-700/60 shadow-lg">

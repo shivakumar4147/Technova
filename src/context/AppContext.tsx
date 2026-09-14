@@ -10,6 +10,14 @@ import {
   INITIAL_ANNOUNCEMENTS, INITIAL_EVENTS, INITIAL_WORKSHOPS, INITIAL_STUDENTS,
   INITIAL_ISSUES, INITIAL_NOTIFICATIONS, INITIAL_AUDIT_LOGS
 } from '@/lib/mockData';
+import {
+  fetchCollegesFromSupabase, fetchProfilesFromSupabase, fetchConversationsFromSupabase,
+  fetchMessagesFromSupabase, fetchAnnouncementsFromSupabase, fetchEventsFromSupabase,
+  fetchWorkshopsFromSupabase, fetchIssuesFromSupabase, upsertProfileInSupabase,
+  insertMessageInSupabase, insertAnnouncementInSupabase, insertIssueInSupabase, updateIssueStatusInSupabase,
+  insertCollegeInSupabase, updateUserRoleInSupabase, updateUserStatusInSupabase
+} from '@/lib/supabaseService';
+import { isSupabaseConfigured, supabase } from '@/lib/supabaseClient';
 
 interface AppContextType {
   currentUser: UserProfile | null;
@@ -28,12 +36,16 @@ interface AppContextType {
   notifications: NotificationItem[];
   auditLogs: AuditLogItem[];
   pendingPhone: string;
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+  setTheme: (theme: 'light' | 'dark') => void;
   
   // Navigation & User
   navigateTo: (screen: string, params?: any) => void;
   setCurrentUser: (user: UserProfile | null) => void;
   switchUserRole: (userId: string) => void;
   loginWithPhone: (phone: string) => boolean;
+  loginWithGoogle: () => Promise<void>;
   verifyOtp: (code: string) => boolean;
   completeProfile: (details: Partial<UserProfile>) => void;
   logout: () => void;
@@ -55,10 +67,12 @@ interface AppContextType {
   markNotificationRead: (id: string) => void;
   createGroupConversation: (name: string, memberPhones: string[]) => void;
   toggleGroupAdminRole: (conversationId: string, targetUserId: string) => void;
-  createCollege: (college: Partial<College>) => void;
+  createCollege: (college: Partial<College>) => College;
   updateCollege: (id: string, college: Partial<College>) => void;
   assignCoordinator: (collegeId: string, coordinatorId: string, coordinatorName: string) => void;
   createUser: (user: Partial<UserProfile>) => void;
+  updateUserRole: (userId: string, role: UserRole) => void;
+  toggleUserStatus: (userId: string) => void;
   createEvent: (evt: Partial<EventItem>) => void;
   createWorkshop: (wk: Partial<Workshop>) => void;
 }
@@ -66,10 +80,55 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<UserProfile | null>(INITIAL_PROFILES[3]); // Default Teacher (Ramesh Bhat)
-  const [currentScreen, setCurrentScreen] = useState<string>('chat_home');
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('technova_current_user');
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) {}
+      }
+    }
+    return null;
+  });
+  const [currentScreen, setCurrentScreen] = useState<string>('login');
   const [screenParams, setScreenParams] = useState<any>({});
   const [pendingPhone, setPendingPhone] = useState<string>('+919800011122');
+  const [theme, setThemeState] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('technova_theme');
+      if (savedTheme === 'dark' || savedTheme === 'light') return savedTheme;
+    }
+    return 'light';
+  });
+
+  const setTheme = (newTheme: 'light' | 'dark') => {
+    setThemeState(newTheme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('technova_theme', newTheme);
+      if (newTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      } else {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      }
+    }
+  };
+
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      } else {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      }
+    }
+  }, [theme]);
   
   const [colleges, setColleges] = useState<College[]>(INITIAL_COLLEGES);
   const [profiles, setProfiles] = useState<UserProfile[]>(INITIAL_PROFILES);
@@ -84,16 +143,149 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [notifications, setNotifications] = useState<NotificationItem[]>(INITIAL_NOTIFICATIONS);
   const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>(INITIAL_AUDIT_LOGS);
 
+  const updateCurrentUserState = (user: UserProfile | null) => {
+    setCurrentUser(user);
+    if (typeof window !== 'undefined') {
+      if (user) {
+        localStorage.setItem('technova_current_user', JSON.stringify(user));
+      } else {
+        localStorage.removeItem('technova_current_user');
+      }
+    }
+  };
+
+  // Auto-fetch data from Supabase if configured
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+
+    async function loadSupabaseData() {
+      try {
+        const [cols, profs, convs, anns, evts, wks, isss] = await Promise.all([
+          fetchCollegesFromSupabase(),
+          fetchProfilesFromSupabase(),
+          fetchConversationsFromSupabase(),
+          fetchAnnouncementsFromSupabase(),
+          fetchEventsFromSupabase(),
+          fetchWorkshopsFromSupabase(),
+          fetchIssuesFromSupabase()
+        ]);
+
+        if (cols) setColleges(cols);
+        if (profs && profs.length > 0) {
+          setProfiles(profs);
+
+          // Restore user profile from Supabase Auth session or localStorage
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            const matched = profs.find(p => p.id === session.user.id || p.email === session.user.email);
+            if (matched) {
+              updateCurrentUserState(matched);
+              if (!matched.is_profile_complete || (!matched.college_id && !matched.college_name)) {
+                setCurrentScreen('profile_setup');
+              } else {
+                const savedScreen = localStorage.getItem('technova_saved_screen');
+                const savedParamsRaw = localStorage.getItem('technova_screen_params');
+                if (savedScreen && savedScreen !== 'login' && savedScreen !== 'profile_setup') {
+                  setCurrentScreen(savedScreen);
+                  if (savedParamsRaw) {
+                    try { setScreenParams(JSON.parse(savedParamsRaw)); } catch (e) {}
+                  }
+                } else {
+                  setCurrentScreen('chat_home');
+                }
+              }
+            }
+          } else {
+            const savedRaw = localStorage.getItem('technova_current_user');
+            if (savedRaw) {
+              try {
+                const savedObj = JSON.parse(savedRaw);
+                const matched = profs.find(p => p.id === savedObj.id || (p.email && p.email === savedObj.email));
+                if (matched) {
+                  updateCurrentUserState(matched);
+                  if (!matched.is_profile_complete || (!matched.college_id && !matched.college_name)) {
+                    setCurrentScreen('profile_setup');
+                  } else {
+                    const savedScreen = localStorage.getItem('technova_saved_screen');
+                    const savedParamsRaw = localStorage.getItem('technova_screen_params');
+                    if (savedScreen && savedScreen !== 'login' && savedScreen !== 'profile_setup') {
+                      setCurrentScreen(savedScreen);
+                      if (savedParamsRaw) {
+                        try { setScreenParams(JSON.parse(savedParamsRaw)); } catch (e) {}
+                      }
+                    } else {
+                      setCurrentScreen('chat_home');
+                    }
+                  }
+                }
+              } catch (e) {}
+            }
+          }
+        }
+        if (convs) setConversations(convs);
+        if (anns) setAnnouncements(anns);
+        if (evts) setEvents(evts);
+        if (wks) setWorkshops(wks);
+        if (isss) setIssues(isss);
+      } catch (err) {
+        console.error('Failed to load initial Supabase data:', err);
+      }
+    }
+
+    loadSupabaseData();
+
+    // Listen to Supabase Auth state changes for Google OAuth redirects
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        const userEmail = session.user.email || '';
+        const userMeta = session.user.user_metadata || {};
+
+        const fetchedProfiles = await fetchProfilesFromSupabase();
+        const existing = fetchedProfiles?.find(p => p.id === session.user.id || p.email === userEmail);
+
+        if (existing && existing.is_profile_complete) {
+          updateCurrentUserState(existing);
+          if (event === 'SIGNED_IN') {
+            setCurrentScreen('chat_home');
+          }
+        } else {
+          setScreenParams({
+            email: userEmail,
+            full_name: userMeta.full_name || userMeta.name || '',
+            avatar_url: userMeta.avatar_url || userMeta.picture || ''
+          });
+          if (event === 'SIGNED_IN') {
+            setCurrentScreen('profile_setup');
+          }
+        }
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   const navigateTo = (screen: string, params?: any) => {
     setCurrentScreen(screen);
     if (params) setScreenParams(params);
+    if (typeof window !== 'undefined') {
+      if (screen !== 'login' && screen !== 'profile_setup') {
+        localStorage.setItem('technova_saved_screen', screen);
+        if (params) localStorage.setItem('technova_screen_params', JSON.stringify(params));
+        else localStorage.removeItem('technova_screen_params');
+      } else {
+        localStorage.removeItem('technova_saved_screen');
+        localStorage.removeItem('technova_screen_params');
+      }
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const switchUserRole = (userId: string) => {
     const target = profiles.find(p => p.id === userId);
     if (target) {
-      setCurrentUser(target);
+      updateCurrentUserState(target);
       // Navigate to suitable screen depending on role
       if (target.role === 'admin') navigateTo('admin_panel');
       else if (target.role === 'coordinator') navigateTo('chat_home');
@@ -105,6 +297,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setPendingPhone(phone);
     const existing = profiles.find(p => p.phone.replace(/\s+/g, '') === phone.replace(/\s+/g, ''));
     return !!existing;
+  };
+
+  const loginWithGoogle = async () => {
+    if (isSupabaseConfigured()) {
+      try {
+        await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: { redirectTo: typeof window !== 'undefined' ? window.location.origin : '' }
+        });
+      } catch (err) {
+        console.error('Supabase Google Auth error:', err);
+      }
+    } else {
+      // In local mock mode, navigate to profile setup page with demo Google details
+      setScreenParams({
+        email: 'user@gmail.com',
+        full_name: 'Technova Participant',
+        avatar_url: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80'
+      });
+      navigateTo('profile_setup');
+    }
   };
 
   const verifyOtp = (code: string): boolean => {
@@ -124,29 +337,56 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return false;
   };
 
-  const completeProfile = (details: Partial<UserProfile>) => {
+  const completeProfile = async (details: Partial<UserProfile>) => {
+    let authUserId: string | undefined = undefined;
+    if (isSupabaseConfigured()) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.id) {
+          authUserId = session.user.id;
+        }
+      } catch (e) {
+        console.error('Failed to get session user ID:', e);
+      }
+    }
+
+    const existingRole = details.role || currentUser?.role || 'teacher';
+
     const newUser: UserProfile = {
-      id: `user-${Date.now()}`,
-      phone: pendingPhone,
+      id: authUserId || `user-${Date.now()}`,
+      email: details.email || screenParams?.email || undefined,
+      phone: details.phone || pendingPhone || '',
       full_name: details.full_name || 'Technova Participant',
-      display_name: details.display_name || details.full_name,
+      display_name: details.display_name || details.full_name || 'Technova Participant',
       avatar_url: details.avatar_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-      role: 'teacher', // Assigned as teacher by default, elevation by Admin
-      college_id: details.college_id || 'col-1',
-      college_name: details.college_name || 'St. Aloysius PU College',
+      role: existingRole,
+      college_id: details.college_id,
+      college_name: details.college_name,
       designation: details.designation || 'Faculty Member',
-      bio: details.bio || 'Technova 2026 faculty delegate.',
+      bio: details.bio || '',
+      is_profile_complete: true,
       is_active: true,
-      created_at: new Date().toISOString()
+      created_at: currentUser?.created_at || new Date().toISOString()
     };
 
-    setProfiles(prev => [...prev, newUser]);
-    setCurrentUser(newUser);
+    setProfiles(prev => [...prev.filter(p => (p.email && p.email !== newUser.email) || p.id !== newUser.id), newUser]);
+    updateCurrentUserState(newUser);
+
+    const saved = await upsertProfileInSupabase(newUser);
+    if (saved) {
+      const merged = { ...newUser, ...saved, is_profile_complete: true };
+      updateCurrentUserState(merged);
+    }
+
     navigateTo('chat_home');
   };
 
   const logout = () => {
-    setCurrentUser(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('technova_saved_screen');
+      localStorage.removeItem('technova_screen_params');
+    }
+    updateCurrentUserState(null);
     navigateTo('login');
   };
 
@@ -179,6 +419,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ...prev,
       [conversationId]: [...(prev[conversationId] || []), newMsg]
     }));
+
+    insertMessageInSupabase(newMsg).catch(err => console.error('Supabase message save error:', err));
 
     // Update conversation preview
     setConversations(prev => prev.map(c => {
@@ -220,6 +462,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     setAnnouncements(prev => [newAnnouncement, ...prev]);
+
+    insertAnnouncementInSupabase(newAnnouncement).catch(err => console.error('Supabase announcement save error:', err));
 
     // Send official announcement into the main group chat
     sendMessage('conv-group-1', ann.content || '', 'official', undefined, undefined, newAnnId);
@@ -361,6 +605,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setIssues(prev => [newIssue, ...prev]);
 
+    insertIssueInSupabase(newIssue).catch(err => console.error('Supabase issue save error:', err));
+
     // Audit log
     const audit: AuditLogItem = {
       id: `aud-${Date.now()}`,
@@ -410,6 +656,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       return iss;
     }));
+
+    updateIssueStatusInSupabase(issueId, status).catch(err => console.error('Supabase issue status update error:', err));
   };
 
   const updateStudentAttendance = (studentId: string, status: Student['attendance_status']) => {
@@ -514,12 +762,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
   };
 
-  const createCollege = (col: Partial<College>) => {
+  const createCollege = (col: Partial<College>): College => {
     const newColId = `col-${Date.now()}`;
     const newCol: College = {
       id: newColId,
       name: col.name || 'New PU College',
-      short_name: col.short_name || 'PU College',
+      short_name: col.short_name || col.name || 'PU College',
       city: col.city || 'Mangaluru',
       address: col.address || 'Mangaluru',
       contact_name: col.contact_name || 'Principal',
@@ -528,7 +776,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       students_count: 0,
       is_active: true
     };
-    setColleges(prev => [...prev, newCol]);
+    setColleges(prev => [...prev.filter(c => c.name.toLowerCase() !== newCol.name.toLowerCase()), newCol]);
+
+    insertCollegeInSupabase(newCol).catch(err => console.error('Supabase college insert error:', err));
 
     // Automatically create college group conversation (Milestone 4 & 6 requirement)
     const newGroupConv: Conversation = {
@@ -557,6 +807,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
       ]
     }));
+
+    return newCol;
   };
 
   const updateCollege = (id: string, col: Partial<College>) => {
@@ -591,6 +843,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       created_at: new Date().toISOString()
     };
     setProfiles(prev => [...prev, newUser]);
+  };
+
+  const updateUserRole = (userId: string, role: UserRole) => {
+    setProfiles(prev => prev.map(p => p.id === userId ? { ...p, role } : p));
+    if (currentUser && currentUser.id === userId) {
+      updateCurrentUserState({ ...currentUser, role });
+    }
+    updateUserRoleInSupabase(userId, role).catch(err => console.error('Failed to update user role in Supabase:', err));
+  };
+
+  const toggleUserStatus = (userId: string) => {
+    setProfiles(prev => prev.map(p => {
+      if (p.id === userId) {
+        const nextStatus = !p.is_active;
+        updateUserStatusInSupabase(userId, nextStatus).catch(err => console.error('Failed to update user status in Supabase:', err));
+        return { ...p, is_active: nextStatus };
+      }
+      return p;
+    }));
   };
 
   const createEvent = (evt: Partial<EventItem>) => {
@@ -647,10 +918,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         notifications,
         auditLogs,
         pendingPhone,
+        theme,
+        toggleTheme,
+        setTheme,
         navigateTo,
         setCurrentUser,
         switchUserRole,
         loginWithPhone,
+        loginWithGoogle,
         verifyOtp,
         completeProfile,
         logout,
@@ -670,6 +945,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateCollege,
         assignCoordinator,
         createUser,
+        updateUserRole,
+        toggleUserStatus,
         createEvent,
         createWorkshop,
       }}

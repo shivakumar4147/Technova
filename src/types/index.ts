@@ -2,6 +2,7 @@ export type UserRole = 'admin' | 'coordinator' | 'teacher';
 
 export interface UserProfile {
   id: string;
+  email?: string;
   phone: string;
   full_name: string;
   display_name?: string;
@@ -11,6 +12,7 @@ export interface UserProfile {
   college_name?: string;
   designation?: string;
   bio?: string;
+  is_profile_complete?: boolean;
   is_active: boolean;
   created_at: string;
 }

@@ -3,35 +3,38 @@
 @tailwind utilities;
 
 :root {
-  /* User Exact 5-Color Palette Tokens (#0F0F0F, #202020, #5DD62C, #337418, #F8F8F8) */
-  --bg-base: #F8F8F8;           /* Crisp Off-White Primary Background */
+  /* Global Dark Obsidian Theme Palette (#0B0F17 base, #111827 surface, #5DD62C electric lime) */
+  --bg-base: #0B0F17;           /* Deep Obsidian Dark Background */
   --brand-lime: #5DD62C;        /* Vibrant Electric Lime Green */
   --brand-forest: #337418;      /* Deep Forest Green */
-  --dark-charcoal: #0F0F0F;     /* Ultra Dark Charcoal */
-  --dark-grey: #202020;         /* Deep Dark Grey */
+  --dark-charcoal: #090D16;     /* Ultra Dark Charcoal Header/Footer */
+  --dark-grey: #1E293B;         /* Deep Dark Border/Input Slate */
 
-  --text-primary: #0F0F0F;      /* High-Contrast Main Text */
-  --text-secondary: #202020;    /* Muted Text */
+  --text-primary: #F8FAFC;      /* High-Contrast Bright White Text */
+  --text-secondary: #94A3B8;    /* Muted Slate Text */
 
-  /* Flat Surface White Primary Token Rules */
-  --glass-level1-bg: #FFFFFF;
-  --glass-level1-border: rgba(32, 32, 32, 0.10);
+  /* Surface Dark Card Tokens */
+  --glass-level1-bg: #111827;
+  --glass-level1-border: #1E293B;
   
-  --glass-level2-bg: #FFFFFF;
+  --glass-level2-bg: #111827;
   --glass-level2-border: rgba(93, 214, 44, 0.45);
   
-  --glass-level3-bg: #FFFFFF;
+  --glass-level3-bg: #111827;
   --glass-level3-border: rgba(93, 214, 44, 0.60);
 
-  --glass-level4-bg: #FFFFFF;
-  --glass-level4-border: rgba(15, 15, 15, 0.25);
+  --glass-level4-bg: #1E293B;
+  --glass-level4-border: rgba(248, 250, 252, 0.15);
 }
 
+html,
 body {
   background-color: var(--bg-base);
   color: var(--text-primary);
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
   -webkit-tap-highlight-color: transparent;
   min-height: 100vh;
   position: relative;
@@ -81,3 +84,30 @@ body::before {
     border-radius: 4px;
   }
 }
+
+/* TECHNOVA Light Reflecting Shimmer Animation */
+@keyframes lightReflect {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-light-reflect {
+  background: linear-gradient(
+    110deg,
+    #000000 20%,
+    #5DD62C 45%,
+    #B2FF78 50%,
+    #5DD62C 55%,
+    #000000 80%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: lightReflect 2s infinite linear;
+}
+

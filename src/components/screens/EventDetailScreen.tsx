@@ -11,92 +11,92 @@ export const EventDetailScreen: React.FC = () => {
   const evt = events[0]; // Technova 2026 National Tech Conclave
 
   return (
-    <div className="pb-24 pt-3 px-4 max-w-md mx-auto min-h-screen">
+    <div className="pb-28 pt-3 px-4 max-w-md mx-auto min-h-screen bg-[#0B0F17] font-sans text-[#F8FAFC]">
       
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <button
           onClick={() => navigateTo('events')}
-          className="p-1.5 rounded-xl text-slate-300 hover:bg-slate-800/80 transition"
+          className="p-1.5 rounded-xl text-[#F8FAFC] hover:bg-[#1E293B] transition cursor-pointer"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div>
-          <h2 className="text-base font-bold text-white">Event Details</h2>
-          <p className="text-[10px] text-slate-400">Venue, schedule, and participating colleges</p>
+          <h2 className="text-base font-black text-[#F8FAFC]">Event Details</h2>
+          <p className="text-[11px] text-[#94A3B8] font-medium">Venue, schedule, and participating colleges</p>
         </div>
       </div>
 
       {/* Main Card */}
-      <GlassCard variant="bright" className="p-5 border-cyan-500/40 mb-4">
+      <div className="p-5 rounded-2xl bg-[#111827] border border-[#1E293B] shadow-md mb-4">
         <div className="flex items-center justify-between mb-3">
-          <Badge variant="green" size="md">
+          <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-lg bg-[#5DD62C] text-[#0B0F17] shadow-xs uppercase tracking-wider">
             {evt.status}
-          </Badge>
-          <span className="text-xs font-mono text-cyan-400 font-bold">{evt.event_date}</span>
+          </span>
+          <span className="text-xs font-mono text-[#5DD62C] font-bold">{evt.event_date}</span>
         </div>
 
-        <h3 className="text-lg font-extrabold text-white mb-2">{evt.name}</h3>
-        <p className="text-xs text-slate-300 leading-relaxed mb-4">{evt.description}</p>
+        <h3 className="text-lg font-black text-[#F8FAFC] mb-2">{evt.name}</h3>
+        <p className="text-xs text-[#94A3B8] leading-relaxed mb-4">{evt.description}</p>
 
-        <div className="space-y-2 p-3 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs">
-          <div className="flex items-center gap-2 text-slate-300">
-            <Clock className="w-4 h-4 text-cyan-400 shrink-0" />
-            <span>{evt.start_time} - {evt.end_time}</span>
+        <div className="space-y-2 p-3.5 rounded-xl bg-[#1E293B] border border-[#334155] text-xs">
+          <div className="flex items-center gap-2 text-[#F8FAFC]">
+            <Clock className="w-4 h-4 text-[#5DD62C] shrink-0" />
+            <span className="font-semibold">{evt.start_time} - {evt.end_time}</span>
           </div>
-          <div className="flex items-center gap-2 text-slate-300">
-            <MapPin className="w-4 h-4 text-cyan-400 shrink-0" />
-            <span className="font-semibold text-white">{evt.venue}</span>
+          <div className="flex items-center gap-2 text-[#F8FAFC]">
+            <MapPin className="w-4 h-4 text-[#5DD62C] shrink-0" />
+            <span className="font-bold text-[#F8FAFC]">{evt.venue}</span>
           </div>
-          <div className="flex items-center gap-2 text-slate-300">
-            <User className="w-4 h-4 text-cyan-400 shrink-0" />
+          <div className="flex items-center gap-2 text-[#F8FAFC]">
+            <User className="w-4 h-4 text-[#5DD62C] shrink-0" />
             <span>Coordinator: Prof. Rajesh Sharma (+91 9811122233)</span>
           </div>
         </div>
-      </GlassCard>
+      </div>
 
       {/* Participating Colleges */}
       <div className="mb-4">
-        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 px-1">
+        <h4 className="text-xs font-extrabold text-[#F8FAFC] uppercase tracking-wider mb-2.5 px-1">
           Participating Colleges ({colleges.length})
         </h4>
 
         <div className="grid grid-cols-2 gap-2">
           {colleges.map(c => (
-            <GlassCard key={c.id} className="p-2.5 flex items-center gap-2 border-slate-800">
-              <div className="w-7 h-7 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-xs">
+            <div key={c.id} className="p-3 rounded-xl bg-[#111827] border border-[#1E293B] flex items-center gap-2.5 shadow-xs">
+              <div className="w-8 h-8 rounded-xl bg-[#5DD62C]/15 text-[#5DD62C] flex items-center justify-center font-bold text-xs shrink-0 border border-[#5DD62C]/40">
                 🏫
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-bold text-white truncate">{c.short_name}</p>
-                <p className="text-[9px] text-slate-400">{c.students_count} Students</p>
+                <p className="text-xs font-bold text-[#F8FAFC] truncate">{c.short_name}</p>
+                <p className="text-[10px] text-[#94A3B8] font-medium">{c.students_count} Students</p>
               </div>
-            </GlassCard>
+            </div>
           ))}
         </div>
       </div>
 
       {/* Parallel Workshops Agenda */}
       <div>
-        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 px-1">
+        <h4 className="text-xs font-extrabold text-[#F8FAFC] uppercase tracking-wider mb-2.5 px-1">
           Parallel Workshop Tracks ({workshops.length})
         </h4>
 
         <div className="space-y-2.5">
           {workshops.map(wk => (
-            <GlassCard key={wk.id} className="p-3">
+            <div key={wk.id} className="p-3.5 rounded-xl bg-[#111827] border border-[#1E293B] shadow-xs">
               <div className="flex items-center justify-between mb-1">
-                <h5 className="text-xs font-bold text-white">{wk.name}</h5>
-                <Badge variant={wk.status === 'ONGOING' ? 'green' : 'cyan'} size="sm">
+                <h5 className="text-xs font-extrabold text-[#F8FAFC]">{wk.name}</h5>
+                <span className="text-[10px] font-extrabold text-[#5DD62C] bg-[#5DD62C]/20 border border-[#5DD62C]/50 px-2 py-0.5 rounded-lg">
                   {wk.start_time}
-                </Badge>
+                </span>
               </div>
-              <p className="text-[11px] text-slate-400 mb-2">{wk.description}</p>
-              <div className="flex items-center justify-between text-[10px] text-cyan-300 font-medium">
+              <p className="text-[11px] text-[#94A3B8] mb-2">{wk.description}</p>
+              <div className="flex items-center justify-between text-[10px] text-[#5DD62C] font-bold">
                 <span>📍 {wk.venue}</span>
                 <span>👨‍🏫 {wk.coordinator_name}</span>
               </div>
-            </GlassCard>
+            </div>
           ))}
         </div>
       </div>

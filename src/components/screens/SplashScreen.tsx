@@ -2,59 +2,85 @@
 
 import React from 'react';
 import { useApp } from '@/context/AppContext';
-import { Radio, ArrowRight, ShieldCheck } from 'lucide-react';
-import { GlassCard } from '@/components/common/GlassCard';
+import { Radio, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 
 export const SplashScreen: React.FC = () => {
-  const { navigateTo, currentUser } = useApp();
+  const { navigateTo, currentUser, screenParams } = useApp();
+
+  const handleGetStarted = () => {
+    if (currentUser) {
+      if (!currentUser.is_profile_complete || !currentUser.college_id) {
+        navigateTo('profile_setup');
+      } else {
+        navigateTo('chat_home');
+      }
+    } else if (screenParams?.email) {
+      navigateTo('profile_setup');
+    } else {
+      navigateTo('login');
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-[#0B0F17] flex flex-col justify-between p-6 text-center relative overflow-hidden">
+    <div className="min-h-screen bg-[#0B0F17] flex flex-col justify-between p-6 text-center relative overflow-hidden text-white font-sans selection:bg-[#5DD62C] selection:text-black">
       
-      {/* Ambient background glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-cyan-500/10 blur-[100px] pointer-events-none" />
+      {/* Background Ambient Glows */}
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#5DD62C]/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Top Space */}
-      <div />
-
-      {/* Center Hero */}
-      <div className="flex flex-col items-center z-10 max-w-sm mx-auto">
-        <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-2xl shadow-cyan-500/30 mb-6 animate-pulse">
-          <Radio className="w-10 h-10 text-black font-extrabold" />
-        </div>
-
-        <h1 className="text-3xl font-extrabold tracking-tight text-white mb-2">
-          TECHNOVA <span className="text-cyan-400">CONNECT</span>
-        </h1>
-
-        <p className="text-xs font-semibold text-cyan-300 tracking-widest uppercase mb-4 px-3 py-1 bg-cyan-500/10 rounded-full border border-cyan-500/20">
-          Mobile Communication & Event Coordination
-        </p>
-
-        <p className="text-sm text-slate-400 max-w-xs leading-relaxed">
-          Real-time event control, college group messaging, official announcement tracking, and issue management for Technova 2026.
-        </p>
-
-        <GlassCard className="mt-8 p-4 border-slate-800/80 text-left w-full">
-          <div className="flex items-center gap-3 text-xs text-slate-300">
-            <ShieldCheck className="w-5 h-5 text-cyan-400 shrink-0" />
-            <span>Secure mobile OTP login & role-based event permissions.</span>
-          </div>
-        </GlassCard>
+      {/* Top Header Badge */}
+      <div className="pt-4 z-10 flex justify-center">
+        <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-[10px] font-black text-[#5DD62C] tracking-widest uppercase shadow-md">
+          <Sparkles className="w-3 h-3 text-[#5DD62C] animate-pulse" />
+          OFFICIAL INTER-COLLEGIATE PLATFORM
+        </span>
       </div>
 
-      {/* Bottom Button */}
-      <div className="z-10 max-w-sm mx-auto w-full">
+      {/* Center Hero with Light-Reflecting TECHNOVA Effect */}
+      <div className="flex flex-col items-center z-10 max-w-sm mx-auto my-auto">
+        
+        {/* Glowing Radio App Icon */}
+        <div className="relative w-20 h-20 rounded-3xl bg-slate-900 border border-[#5DD62C]/40 flex items-center justify-center text-[#5DD62C] shadow-2xl mb-8 group">
+          <div className="absolute inset-0 rounded-3xl bg-[#5DD62C]/20 blur-md group-hover:blur-lg transition-all" />
+          <Radio className="w-10 h-10 text-[#5DD62C] font-black relative z-10 animate-pulse" />
+        </div>
+
+        {/* LIGHT-REFLECTING TECHNOVA TEXT */}
+        <h1 className="text-4xl sm:text-5xl font-black tracking-tighter uppercase mb-2 animate-light-reflect">
+          TECHNOVA
+        </h1>
+
+        <p className="text-sm font-extrabold text-[#5DD62C] tracking-widest uppercase mb-6 flex items-center gap-1">
+          <span>CONNECT</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#5DD62C] inline-block animate-ping" />
+        </p>
+
+        <p className="text-xs font-medium text-slate-400 max-w-xs leading-relaxed mb-6">
+          Real-time event operations, college group messaging, official announcement tracking & delegate permissions for Technova 2026.
+        </p>
+
+        <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-left w-full shadow-lg backdrop-blur-sm">
+          <div className="flex items-center gap-3 text-xs text-slate-300">
+            <ShieldCheck className="w-5 h-5 text-[#5DD62C] shrink-0" />
+            <span className="font-medium text-[11px] leading-tight">
+              Google OAuth authentication & role-based delegate security powered by Supabase.
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Action Area */}
+      <div className="z-10 max-w-sm mx-auto w-full pb-4">
         <button
-          onClick={() => navigateTo(currentUser ? 'chat_home' : 'login')}
-          className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-base shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 active:scale-95 transition-all"
+          onClick={handleGetStarted}
+          className="w-full py-4 rounded-2xl bg-[#5DD62C] hover:bg-[#50b925] text-[#0F0F0F] font-extrabold text-base shadow-xl flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer border border-[#5DD62C]"
         >
           <span>Get Started</span>
           <ArrowRight className="w-5 h-5 stroke-[2.5]" />
         </button>
 
-        <p className="text-[11px] text-slate-500 mt-4">
-          Technova 2026 • Official College Coordination Platform
+        <p className="text-[11px] text-slate-500 font-semibold mt-4">
+          Technova 2026 • Command & Delegate Network
         </p>
       </div>
     </div>

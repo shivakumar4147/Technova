@@ -3,11 +3,10 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { ArrowLeft, CheckCircle2, RefreshCw } from 'lucide-react';
-import { GlassCard } from '@/components/common/GlassCard';
 
 export const OtpScreen: React.FC = () => {
   const { pendingPhone, verifyOtp, navigateTo } = useApp();
-  const [otp, setOtp] = useState(['1', '2', '3', '4', '5', '6']);
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
 
   const handleChange = (index: number, value: string) => {
@@ -32,18 +31,18 @@ export const OtpScreen: React.FC = () => {
     setError('');
     const success = verifyOtp(code);
     if (!success) {
-      setError('Invalid OTP. Use 123456 for demo verification.');
+      setError('Invalid verification code');
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F17] flex flex-col justify-center px-4 py-8 relative">
+    <div className="min-h-screen bg-[#0B0F17] flex flex-col justify-center px-4 py-8 relative text-[#F8FAFC] font-sans">
       <div className="max-w-sm mx-auto w-full">
         
         {/* Back Button */}
         <button
           onClick={() => navigateTo('login')}
-          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white mb-6 transition"
+          className="flex items-center gap-1.5 text-xs text-[#94A3B8] hover:text-[#F8FAFC] mb-6 transition font-bold cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Change Number</span>
@@ -51,15 +50,15 @@ export const OtpScreen: React.FC = () => {
 
         {/* Title */}
         <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold text-white">Verify your number</h2>
-          <p className="text-xs text-slate-400 mt-1">
-            We sent a 6-digit verification code to
+          <h2 className="text-2xl font-black text-[#F8FAFC]">Verify your number</h2>
+          <p className="text-xs text-[#94A3B8] font-medium mt-1">
+            Enter the 6-digit verification code sent to
           </p>
-          <p className="text-sm font-bold text-cyan-400 mt-0.5">{pendingPhone}</p>
+          <p className="text-sm font-black text-[#5DD62C] mt-0.5">{pendingPhone}</p>
         </div>
 
-        {/* OTP Input Boxes */}
-        <GlassCard variant="bright" className="p-6">
+        {/* OTP Input Card */}
+        <div className="p-6 rounded-2xl bg-[#111827] border border-[#1E293B] shadow-md">
           <div className="flex justify-between gap-2 mb-6">
             {otp.map((digit, idx) => (
               <input
@@ -69,33 +68,32 @@ export const OtpScreen: React.FC = () => {
                 maxLength={1}
                 value={digit}
                 onChange={(e) => handleChange(idx, e.target.value)}
-                className="w-11 h-12 text-center text-lg font-bold text-white bg-slate-900/80 border border-slate-700/80 rounded-xl focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition focus:outline-none"
+                placeholder="•"
+                className="w-11 h-12 text-center text-lg font-black text-[#F8FAFC] bg-[#1E293B] border border-[#334155] rounded-xl focus:border-[#5DD62C] transition focus:outline-none placeholder-[#94A3B8]"
               />
             ))}
           </div>
 
-          {error && <p className="text-xs text-rose-400 text-center mb-4">{error}</p>}
+          {error && <p className="text-xs text-rose-400 font-bold text-center mb-4">{error}</p>}
 
           <button
             onClick={handleVerify}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-sm shadow-md shadow-cyan-500/20 flex items-center justify-center gap-2 active:scale-[0.98] transition"
+            className="w-full py-3.5 rounded-xl bg-[#5DD62C] hover:bg-[#50b925] text-[#0B0F17] font-black text-sm shadow-xs flex items-center justify-center gap-2 active:scale-[0.98] transition cursor-pointer"
           >
             <span>Verify & Proceed</span>
             <CheckCircle2 className="w-4 h-4" />
           </button>
-        </GlassCard>
+        </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between text-xs text-slate-400 mt-6 px-2">
+        <div className="flex items-center justify-center text-xs text-[#94A3B8] font-bold mt-6">
           <button
-            onClick={() => setOtp(['1', '2', '3', '4', '5', '6'])}
-            className="flex items-center gap-1 hover:text-cyan-400 transition"
+            onClick={() => setOtp(['', '', '', '', '', ''])}
+            className="flex items-center gap-1.5 hover:text-[#F8FAFC] transition cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            <span>Resend OTP</span>
+            <span>Resend Code</span>
           </button>
-
-          <span className="text-[11px] text-cyan-400/80 font-mono">Demo OTP: 123456</span>
         </div>
 
       </div>

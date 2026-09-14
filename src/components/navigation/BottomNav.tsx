@@ -20,7 +20,16 @@ export const BottomNav: React.FC = () => {
 
   const unreadNotifs = notifications.filter(n => !n.is_read).length;
 
-  // Teacher 4-tab navigation
+  // Navigation items for Admin & Coordinator (5-tab navigation including Control & Profile)
+  const adminItems: NavItem[] = [
+    { id: 'chat_home', label: 'Chats', icon: MessageSquare },
+    { id: 'events', label: 'Events', icon: Calendar },
+    { id: 'notifications', label: 'Alerts', icon: Bell, badge: unreadNotifs },
+    { id: 'admin_dashboard', label: 'Control', icon: Shield },
+    { id: 'profile', label: 'Profile', icon: User },
+  ];
+
+  // Navigation items for Teachers / Delegates (4-tab navigation including Profile)
   const teacherItems: NavItem[] = [
     { id: 'chat_home', label: 'Chats', icon: MessageSquare },
     { id: 'events', label: 'Events', icon: Calendar },
@@ -28,15 +37,7 @@ export const BottomNav: React.FC = () => {
     { id: 'profile', label: 'Profile', icon: User },
   ];
 
-  // Coordinator 4-tab navigation
-  const coordinatorItems: NavItem[] = [
-    { id: 'chat_home', label: 'Chats', icon: MessageSquare },
-    { id: 'events', label: 'Events', icon: Calendar },
-    { id: 'notifications', label: 'Alerts', icon: Bell, badge: unreadNotifs },
-    { id: 'admin_dashboard', label: 'Control', icon: Shield },
-  ];
-
-  const items = currentUser.role === 'teacher' ? teacherItems : coordinatorItems;
+  const items = (currentUser.role === 'admin' || currentUser.role === 'coordinator') ? adminItems : teacherItems;
 
   // Determine active index
   const activeIndex = items.findIndex(item => {
@@ -55,16 +56,15 @@ export const BottomNav: React.FC = () => {
   const topY = 18;
   const cornerRadius = 18;    // Rounded outer corners for navbar
   const dipDepth = 24;        // Deep U-scoop bowl
-  const scoopRadius = 28;     // 28px scoop radius around 19px bubble radius = 9px equal gap!
-  const shoulderRadius = 12;  // Soft rounded shoulder fillets at scoop entry & exit
+  const scoopRadius = 28;     // 28px scoop radius around 19px bubble radius
+  const shoulderRadius = 12;  // Soft rounded shoulder fillets
 
-  // Tab center X calculation with inset margin so Tab 0 & Tab 4 never collide with navbar corners
   const startMargin = 42;
   const endMargin = 318;
   const tabStep = (endMargin - startMargin) / (totalItems - 1);
   const activeCx = startMargin + safeActiveIndex * tabStep;
 
-  // SVG Path with equal concentric U-scoop cutout and rounded shoulders
+  // SVG Path with equal concentric U-scoop cutout
   const curvePath = `
     M ${cornerRadius},${topY}
     L ${activeCx - scoopRadius - shoulderRadius},${topY}
@@ -82,7 +82,6 @@ export const BottomNav: React.FC = () => {
     Z
   `;
 
-  // Ultra-Smooth 60fps spring physics matching SVG curve, bubble motion, and rising icon
   const smoothSpring = {
     type: 'spring' as const,
     stiffness: 260,
@@ -91,27 +90,27 @@ export const BottomNav: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-1.5 left-0 right-0 z-40 px-2 max-w-[360px] mx-auto select-none pointer-events-none">
+    <div className="fixed bottom-1.5 left-0 right-0 z-40 px-2 max-w-[360px] mx-auto select-none pointer-events-none font-sans">
       <div className="relative w-full h-[76px] pointer-events-auto">
         
-        {/* White Navbar Container SVG (~2cm height) with drop shadow */}
+        {/* Dark Navbar Container SVG */}
         <svg
-          className="absolute inset-0 w-full h-full drop-shadow-[0_12px_28px_rgba(0,0,0,0.15)]"
+          className="absolute inset-0 w-full h-full drop-shadow-[0_12px_28px_rgba(0,0,0,0.45)]"
           viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
         >
           <motion.path
             initial={false}
             animate={{ d: curvePath }}
-            fill="#FFFFFF"
-            stroke="#E2E8F0"
-            strokeWidth="1"
+            fill="#090D16"
+            stroke="#1E293B"
+            strokeWidth="1.5"
             transition={smoothSpring}
           />
         </svg>
 
-        {/* Sliding Electric Green Bubble Circle (38px x 38px, radius 19px) - Centered at activeCx */}
+        {/* Sliding Electric Green Bubble Circle */}
         <motion.div
-          className="absolute top-[-8px] w-[38px] h-[38px] rounded-full bg-[#55E600] shadow-[0_6px_16px_rgba(0,0,0,0.32),_0_2px_8px_rgba(85,230,0,0.4)] pointer-events-none z-20"
+          className="absolute top-[-8px] w-[38px] h-[38px] rounded-full bg-[#5DD62C] shadow-[0_6px_16px_rgba(0,0,0,0.5),_0_2px_8px_rgba(93,214,44,0.5)] pointer-events-none z-20"
           initial={false}
           animate={{
             left: `${(activeCx / viewBoxWidth) * 100}%`,
@@ -120,7 +119,7 @@ export const BottomNav: React.FC = () => {
           style={{ transform: 'translateX(-50%)' }}
         />
 
-        {/* Interactive Tab Items - Positioned ABSOLUTELY at tabCx for 100% pixel-perfect centering */}
+        {/* Interactive Tab Items */}
         <div className="absolute inset-0 top-[18px] pointer-events-none z-30">
           {items.map((item, index) => {
             const Icon = item.icon;
@@ -131,13 +130,12 @@ export const BottomNav: React.FC = () => {
               <button
                 key={item.id}
                 onClick={() => navigateTo(item.id)}
-                className="absolute top-0 w-[50px] h-[58px] flex flex-col items-center justify-start focus:outline-none pointer-events-auto pt-2"
+                className="absolute top-0 w-[50px] h-[58px] flex flex-col items-center justify-start focus:outline-none pointer-events-auto pt-2 cursor-pointer"
                 style={{
                   left: `${(tabCx / viewBoxWidth) * 100}%`,
                   transform: 'translateX(-50%)',
                 }}
               >
-                {/* Elevating Icon: Rises UP (-22px) into the green bubble when active, rests at 11px in the vertical center of the 2cm bar when inactive */}
                 <motion.div
                   className="relative flex items-center justify-center pointer-events-none z-30"
                   animate={{
@@ -149,22 +147,22 @@ export const BottomNav: React.FC = () => {
                   <Icon
                     className={`w-[19px] h-[19px] transition-colors duration-200 ${
                       isActive
-                        ? 'text-[#000000] stroke-[2.4px]'
-                        : 'text-[#334155] stroke-[2px] hover:text-[#0F0F0F]'
+                        ? 'text-[#0B0F17] stroke-[2.5px]'
+                        : 'text-[#94A3B8] stroke-[2px] hover:text-[#F8FAFC]'
                     }`}
                   />
 
                   {/* Unread Alert Badge count */}
                   {item.badge && item.badge > 0 && !isActive ? (
-                    <span className="absolute top-[-4px] right-[-6px] min-w-[14px] h-[14px] px-1 rounded-full bg-[#55E600] text-[8px] font-black text-[#0F0F0F] flex items-center justify-center shadow-xs">
+                    <span className="absolute top-[-4px] right-[-6px] min-w-[14px] h-[14px] px-1 rounded-full bg-[#5DD62C] text-[8px] font-black text-[#0B0F17] flex items-center justify-center shadow-xs">
                       {item.badge}
                     </span>
                   ) : null}
                 </motion.div>
 
-                {/* Active Text Label: Elevated into scoop cutout bowl for perfect vertical alignment */}
+                {/* Active Text Label */}
                 <motion.span
-                  className="absolute top-[36px] text-[11px] font-semibold text-[#55606E] tracking-tight whitespace-nowrap text-center pointer-events-none z-30"
+                  className="absolute top-[36px] text-[11px] font-extrabold text-[#5DD62C] tracking-tight whitespace-nowrap text-center pointer-events-none z-30"
                   animate={{
                     opacity: isActive ? 1 : 0,
                     y: isActive ? -4 : 4,
@@ -182,20 +180,3 @@ export const BottomNav: React.FC = () => {
     </div>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

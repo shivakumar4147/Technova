@@ -17,17 +17,17 @@ export const EventsScreen: React.FC = () => {
   });
 
   return (
-    <div className="pb-24 pt-3 px-4 max-w-md mx-auto min-h-screen">
+    <div className="pb-28 pt-3 px-4 max-w-md mx-auto min-h-screen bg-[#0B0F17] font-sans text-[#F8FAFC]">
       
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-base font-bold text-white">Technova Events & Workshops</h2>
-          <p className="text-[10px] text-slate-400">Schedule, venues, and college allocations</p>
+          <h2 className="text-base font-black text-[#F8FAFC]">Technova Events & Workshops</h2>
+          <p className="text-[11px] text-[#94A3B8] font-medium">Schedule, venues, and college allocations</p>
         </div>
         <button
           onClick={() => navigateTo('workshops')}
-          className="px-3 py-1.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-bold text-xs border border-cyan-500/30 hover:bg-cyan-500/20 transition"
+          className="px-3.5 py-1.5 rounded-xl bg-[#5DD62C] text-[#0B0F17] font-black text-xs shadow-xs hover:bg-[#50b925] active:scale-95 transition cursor-pointer"
         >
           Workshops View
         </button>
@@ -39,10 +39,10 @@ export const EventsScreen: React.FC = () => {
           <button
             key={t}
             onClick={() => setActiveTab(t)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold capitalize transition ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold capitalize transition cursor-pointer ${
               activeTab === t
-                ? 'bg-cyan-500 text-black font-bold shadow-md shadow-cyan-500/20'
-                : 'bg-slate-800/60 text-slate-400 hover:text-white'
+                ? 'bg-[#5DD62C] text-[#0B0F17] font-black shadow-xs'
+                : 'bg-[#1E293B] text-[#94A3B8] hover:text-[#F8FAFC]'
             }`}
           >
             {t}
@@ -53,45 +53,48 @@ export const EventsScreen: React.FC = () => {
       {/* Event Cards */}
       <div className="space-y-3">
         {filteredEvents.map(evt => (
-          <GlassCard
+          <div
             key={evt.id}
-            variant="bright"
             onClick={() => navigateTo('event_detail', { eventId: evt.id })}
-            className="p-4 border-cyan-500/30 cursor-pointer"
+            className="p-4 rounded-2xl bg-[#111827] border border-[#1E293B] hover:border-[#5DD62C] cursor-pointer transition-all shadow-xs"
           >
             <div className="flex items-center justify-between mb-2">
-              <Badge variant={evt.status === 'ONGOING' ? 'green' : 'cyan'}>
+              <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-lg tracking-wider uppercase ${
+                evt.status === 'ONGOING'
+                  ? 'bg-[#5DD62C] text-[#0B0F17] shadow-xs'
+                  : 'bg-[#5DD62C]/20 text-[#5DD62C] border border-[#5DD62C]/50'
+              }`}>
                 {evt.status}
-              </Badge>
-              <div className="flex items-center gap-1 text-[10px] text-cyan-400 font-mono">
-                <Clock className="w-3 h-3" />
+              </span>
+              <div className="flex items-center gap-1 text-[11px] text-[#5DD62C] font-mono font-bold">
+                <Clock className="w-3.5 h-3.5 text-[#5DD62C]" />
                 <span>{evt.start_time} - {evt.end_time}</span>
               </div>
             </div>
 
-            <h3 className="text-sm font-extrabold text-white mb-1">{evt.name}</h3>
-            <p className="text-xs text-slate-300 line-clamp-2 mb-3">{evt.description}</p>
+            <h3 className="text-sm font-extrabold text-[#F8FAFC] mb-1">{evt.name}</h3>
+            <p className="text-xs text-[#94A3B8] line-clamp-2 mb-3 leading-relaxed">{evt.description}</p>
 
-            <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1 text-xs">
-              <div className="flex items-center gap-2 text-slate-300">
-                <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                <span className="font-semibold text-white">{evt.venue}</span>
+            <div className="p-3 rounded-xl bg-[#1E293B] border border-[#334155] space-y-1.5 text-xs">
+              <div className="flex items-center gap-2 text-[#F8FAFC]">
+                <MapPin className="w-3.5 h-3.5 text-[#5DD62C] shrink-0" />
+                <span className="font-bold text-[#F8FAFC]">{evt.venue}</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-400 text-[11px]">
-                <Users className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <div className="flex items-center gap-2 text-[#94A3B8] text-[11px]">
+                <Users className="w-3.5 h-3.5 text-[#94A3B8] shrink-0" />
                 <span>{evt.participating_colleges_count} Colleges • {evt.registered_students_count} Registered Students</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-end mt-3 text-xs font-bold text-cyan-400">
+            <div className="flex items-center justify-end mt-3 text-xs font-bold text-[#5DD62C] hover:text-[#50b925] gap-0.5">
               <span>View Full Schedule & Details</span>
               <ChevronRight className="w-4 h-4" />
             </div>
-          </GlassCard>
+          </div>
         ))}
 
         {filteredEvents.length === 0 && (
-          <div className="text-center py-12 text-slate-500 text-xs">
+          <div className="text-center py-12 text-[#94A3B8] text-xs font-medium bg-[#111827] rounded-2xl border border-[#1E293B] p-6">
             No events scheduled under this section.
           </div>
         )}
