@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* User Exact 5-Color Palette Tokens (#0F0F0F, #202020, #5DD62C, #337418, #F8F8F8) */
+  --bg-base: #F8F8F8;           /* Crisp Off-White Primary Background */
+  --brand-lime: #5DD62C;        /* Vibrant Electric Lime Green */
+  --brand-forest: #337418;      /* Deep Forest Green */
+  --dark-charcoal: #0F0F0F;     /* Ultra Dark Charcoal */
+  --dark-grey: #202020;         /* Deep Dark Grey */
+
+  --text-primary: #0F0F0F;      /* High-Contrast Main Text */
+  --text-secondary: #202020;    /* Muted Text */
+
+  /* Flat Surface White Primary Token Rules */
+  --glass-level1-bg: #FFFFFF;
+  --glass-level1-border: rgba(32, 32, 32, 0.10);
+  
+  --glass-level2-bg: #FFFFFF;
+  --glass-level2-border: rgba(93, 214, 44, 0.45);
+  
+  --glass-level3-bg: #FFFFFF;
+  --glass-level3-border: rgba(93, 214, 44, 0.60);
+
+  --glass-level4-bg: #FFFFFF;
+  --glass-level4-border: rgba(15, 15, 15, 0.25);
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* NO BACKGROUND GRADIENTS OR GLOWS */
+body::before {
+  display: none !important;
+}
+
+/* Clean Flat White Primary & Electric Lime Utilities */
+@layer utilities {
+  .glass-level1 {
+    background: var(--glass-level1-bg);
+    border: 1px solid var(--glass-level1-border);
+    box-shadow: 0 2px 6px rgba(15, 15, 15, 0.04);
+  }
+
+  .glass-level2 {
+    background: var(--glass-level2-bg);
+    border: 1px solid var(--glass-level2-border);
+    box-shadow: 0 3px 10px rgba(15, 15, 15, 0.07);
+  }
+
+  .glass-level3 {
+    background: var(--glass-level3-bg);
+    border: 1px solid var(--glass-level3-border);
+    box-shadow: 0 4px 14px rgba(15, 15, 15, 0.10);
+  }
+
+  .glass-level4 {
+    background: var(--glass-level4-bg);
+    border: 1px solid var(--glass-level4-border);
+    box-shadow: 0 8px 24px rgba(15, 15, 15, 0.15);
+  }
+
+  /* Custom Clean Scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(93, 214, 44, 0.50);
+    border-radius: 4px;
+  }
+}

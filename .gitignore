@@ -1,0 +1,29 @@
+# Dependencies & Build artifacts
+node_modules/
+.next/
+dist/
+build/
+out/
+.dart_tool/
+android/.gradle/
+ios/Pods/
+
+# Environment & OS files
+.env*
+!.env.example
+.DS_Store
+Thumbs.db
+
+# Large media files (if not needed in source control)
+*.mp4
+*.mov
+*.zip
+*.tar.gz
+node_modules
+
+node_modules/
+.next/
+build/
+dist/
+*.mp4
+.env*
